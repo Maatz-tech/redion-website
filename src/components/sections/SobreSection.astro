@@ -1,0 +1,89 @@
+---
+import Button from '../Button.astro';
+import Icon from '../Icon.astro';
+import RevealText from '../RevealText.astro';
+import { SOBRE_PARAGRAFOS } from '../../data/conteudo';
+
+/** "A Redion" — node 4010:67 (desktop) / 4060:1544 (mobile). */
+---
+
+<section id="a-redion" class="section-pad bg-white">
+  <!--
+    Mobile: título → foto → texto → CTA (uma coluna).
+    Desktop: a foto vai para a coluna da esquerda e ocupa as três linhas.
+    O grid resolve isso sem duplicar markup nem reordenar com `order`.
+  -->
+  <div
+    class="container-lp grid gap-10 lg:grid-cols-[38.5%_1fr] lg:gap-x-20 lg:gap-y-10"
+  >
+    <div class="lg:col-start-2 lg:row-start-1 flex flex-col gap-4">
+      <p class="eyebrow" data-reveal>A Redion</p>
+      <RevealText
+        as="h2"
+        class="h2 lg:max-w-[536px]"
+        text="O futuro do cuidado|**começa pelas pessoas**"
+      />
+    </div>
+
+    <div class="lg:col-start-1 lg:row-start-1 lg:row-span-3" data-reveal>
+      <figure class="photo-frame relative aspect-[327/466] w-full lg:aspect-[462/659] lg:h-auto">
+        <img
+          src="/images/redion/photo.webp"
+          srcset="/images/redion/photo-700.webp 700w, /images/redion/photo.webp 1400w"
+          sizes="(max-width: 1023px) 100vw, 462px"
+          alt="Profissional da Redion em frente a um prédio corporativo"
+          width="1400"
+          height="933"
+          loading="lazy"
+          data-parallax
+          class="absolute left-0 top-[-12px] h-[calc(100%+24px)] w-full object-cover object-[47%_center]"
+        />
+
+        <a
+          href="#video"
+          class="video-btn absolute bottom-12 left-1/2 flex -translate-x-1/2 items-center gap-3 rounded-full border border-white/30 bg-black/20 py-2.5 pl-2.5 pr-[23px] backdrop-blur-[2px] lg:bottom-16"
+        >
+          <span
+            class="flex size-10 items-center justify-center rounded-full bg-white text-medium-red"
+          >
+            <Icon name="play" size={20} />
+          </span>
+          <span class="whitespace-nowrap text-xl text-white">Assista ao vídeo</span>
+        </a>
+      </figure>
+    </div>
+
+    <div class="lg:col-start-2 lg:row-start-2 flex flex-col gap-6" data-reveal-stagger>
+      {SOBRE_PARAGRAFOS.map((p) => <p class="body">{p}</p>)}
+    </div>
+
+    <div class="lg:col-start-2 lg:row-start-3" data-reveal>
+      <Button href="#o-programa">Conheça o Programa</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .video-btn {
+    box-shadow:
+      0 10px 34px rgba(4, 6, 26, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .video-btn:hover {
+    transform: translate(-50%, -3px);
+  }
+</style>
+
+<script>
+  import { revealOnScroll, revealStagger, revealWords, parallax } from '../../lib/motion';
+
+  revealOnScroll('#a-redion [data-reveal]');
+  revealStagger('#a-redion [data-reveal-stagger]', 0.12);
+  revealWords('#a-redion [data-reveal-words]');
+  // Parallax discreto: 10 px. A folga vertical que o efeito exige (24 px, os
+  // `top-[-12px]` / `h-[calc(100%+24px)]` na figure) escala a foto em ~3,6%.
+  // Amplitude maior escalava 8,5% e já dava para ver o desvio do comp.
+  parallax('#a-redion [data-parallax]', 10);
+</script>

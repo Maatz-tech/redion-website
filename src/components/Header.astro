@@ -1,0 +1,158 @@
+---
+import Icon from './Icon.astro';
+import Button from './Button.astro';
+import { NAV_LINKS, INSCRICAO_URL } from '../data/site';
+---
+
+<header
+  id="site-header"
+  class="sticky top-0 z-50 bg-white transition-shadow duration-300 data-[scrolled]:shadow-[0_1px_24px_rgba(3,3,56,0.08)]"
+>
+  <div
+    class="flex items-center justify-between px-6 py-4 lg:px-[clamp(40px,8.34vw,120px)] lg:py-6"
+  >
+    <a href="#top" class="shrink-0" aria-label="Redion — página inicial">
+      <img
+        src="/images/brand/redion-dark.svg"
+        alt="Redion"
+        width="186"
+        height="32"
+        class="h-6 w-[140px] lg:h-8 lg:w-[186px]"
+      />
+    </a>
+
+    <nav aria-label="Navegação principal" class="hidden lg:block">
+      <ul class="flex items-center gap-6 xl:gap-10">
+        {
+          NAV_LINKS.map((link) => (
+            <li>
+              <a href={link.href} class="nav-link whitespace-nowrap text-base leading-[1.19] text-dark-blue">
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <Button href={INSCRICAO_URL} class="hidden lg:inline-flex lg:py-3">Inscreva-se agora</Button>
+
+    <button
+      type="button"
+      id="menu-toggle"
+      class="lg:hidden"
+      aria-label="Abrir menu"
+      aria-expanded="false"
+      aria-controls="menu-mobile"
+    >
+      <Icon name="menu" class="text-dark-blue" />
+    </button>
+  </div>
+
+  <!-- Menu mobile -->
+  <div
+    id="menu-mobile"
+    hidden
+    class="overflow-hidden border-t border-medium-gray bg-white lg:hidden"
+  >
+    <nav aria-label="Navegação principal" class="px-6 py-6">
+      <ul class="flex flex-col gap-5">
+        {
+          NAV_LINKS.map((link) => (
+            <li>
+              <a href={link.href} class="block text-lg text-dark-blue" data-menu-item>
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <Button href={INSCRICAO_URL} class="mt-6" data-menu-item>Inscreva-se agora</Button>
+    </nav>
+  </div>
+</header>
+
+<style>
+  /* Sublinhado que cresce do centro — micro-interação em CSS (Fase 6.5:
+     hover não gasta JS). */
+  .nav-link {
+    position: relative;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: -6px;
+    height: 2px;
+    background: var(--color-bright-red);
+    transform: scaleX(0);
+    transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after {
+    transform: scaleX(1);
+  }
+</style>
+
+<script>
+  import { EASE, prefersReducedMotion } from '../lib/motion';
+
+  const header = document.getElementById('site-header')!;
+  const toggle = document.getElementById('menu-toggle')!;
+  const menu = document.getElementById('menu-mobile')!;
+  const itens = menu.querySelectorAll<HTMLElement>('[data-menu-item]');
+
+  // Sombra só depois de sair do topo
+  const sentinela = () => {
+    if (window.scrollY > 8) header.dataset.scrolled = '';
+    else delete header.dataset.scrolled;
+  };
+  sentinela();
+  window.addEventListener('scroll', sentinela, { passive: true });
+
+  let aberto = false;
+
+  async function alternar(forcar?: boolean) {
+    aberto = forcar ?? !aberto;
+    toggle.setAttribute('aria-expanded', String(aberto));
+    toggle.setAttribute('aria-label', aberto ? 'Fechar menu' : 'Abrir menu');
+
+    if (prefersReducedMotion()) {
+      menu.hidden = !aberto;
+      return;
+    }
+
+    const { animate, stagger } = await import('motion');
+
+    if (aberto) {
+      menu.hidden = false;
+      const alvo = menu.scrollHeight;
+      animate(menu, { height: [0, alvo] }, { duration: 0.4, ease: EASE }).then(() => {
+        menu.style.height = 'auto';
+      });
+      animate(
+        itens,
+        { opacity: [0, 1], y: [-8, 0] },
+        { duration: 0.3, ease: EASE, delay: stagger(0.05, { startDelay: 0.08 }) }
+      );
+    } else {
+      await animate(menu, { height: [menu.offsetHeight, 0] }, { duration: 0.28, ease: EASE });
+      menu.hidden = true;
+    }
+  }
+
+  toggle.addEventListener('click', () => alternar());
+
+  // fecha ao navegar e no Esc
+  menu.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a')) alternar(false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && aberto) {
+      alternar(false);
+      toggle.focus();
+    }
+  });
+</script>

@@ -1,0 +1,151 @@
+---
+import Button from '../Button.astro';
+import Icon from '../Icon.astro';
+import RevealText from '../RevealText.astro';
+import { FAQ } from '../../data/conteudo';
+import { CONTATO_URL } from '../../data/site';
+
+/** "Perguntas frequentes" — node 4029:873 (desktop) / 4060:1902 (mobile). */
+---
+
+<section id="faq" class="section-pad bg-white">
+  <div class="container-lp flex flex-col gap-8 lg:flex-row lg:justify-center lg:gap-16">
+    <div class="flex flex-col items-center gap-7 lg:w-[38%] lg:shrink-0 lg:items-start">
+      <div class="flex flex-col gap-3.5 text-center lg:text-left">
+        <p class="eyebrow" data-reveal>FAQ</p>
+        <RevealText as="h2" class="h2 leading-[1.3]" text="Perguntas frequentes" />
+        <p class="body leading-[1.5]" data-reveal>
+          Ainda ficou com alguma dúvida? Entre em contato com a gente.
+        </p>
+      </div>
+
+      <div data-reveal>
+        <Button href={CONTATO_URL} variant="outline">Fale conosco</Button>
+      </div>
+    </div>
+
+    <ul class="flex flex-col gap-4 lg:min-w-0 lg:flex-1" data-faq>
+      {
+        FAQ.map((item, i) => (
+          <li class="faq-card rounded-[24px] bg-light-gray p-6" data-reveal-x>
+            <h3>
+              <button
+                type="button"
+                class="faq-trigger flex w-full items-start justify-between gap-4 text-left"
+                aria-expanded="false"
+                aria-controls={`faq-painel-${i}`}
+              >
+                <span class="faq-pergunta text-lg font-medium leading-[1.22] text-dark-blue">
+                  {item.pergunta}
+                </span>
+                <span class="relative size-6 shrink-0 text-bright-red">
+                  <Icon name="plus-circle" class="faq-mais absolute inset-0" />
+                  <Icon name="minus-circle" class="faq-menos absolute inset-0" />
+                </span>
+              </button>
+            </h3>
+
+            <div id={`faq-painel-${i}`} class="faq-panel" hidden>
+              <p class="body pt-4 text-base leading-[1.22]">{item.resposta}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .faq-panel {
+    overflow: hidden;
+  }
+
+  /* Troca +/− em CSS: o ícone gira 90° e some, o outro entra.
+     `:global` porque os SVGs vêm do Icon.astro, que tem escopo próprio. */
+  :global(.faq-mais),
+  :global(.faq-menos) {
+    transition:
+      opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  :global(.faq-menos) {
+    opacity: 0;
+    transform: rotate(-90deg);
+  }
+
+  [data-aberto] :global(.faq-mais) {
+    opacity: 0;
+    transform: rotate(90deg);
+  }
+
+  [data-aberto] :global(.faq-menos) {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+
+  /* Hover no card inteiro: fundo, pergunta e ícone reagem juntos. O seletor
+     mira `.faq-pergunta` em vez de `span:first-child` para não depender da
+     ordem do markup. */
+  .faq-card,
+  .faq-pergunta {
+    transition:
+      background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .faq-card:hover {
+    background: var(--color-medium-gray);
+  }
+
+  .faq-card:hover .faq-pergunta,
+  .faq-trigger:focus-visible .faq-pergunta {
+    color: var(--color-medium-red);
+  }
+</style>
+
+<script>
+  import { revealOnScroll, revealWords, revealFromX, toggleAccordion } from '../../lib/motion';
+
+  revealWords('#faq [data-reveal-words]');
+  revealOnScroll('#faq [data-reveal]');
+  revealFromX('#faq [data-faq] > li', 28, 0.08, { amount: 0.4 });
+
+  const itens = Array.from(document.querySelectorAll<HTMLElement>('#faq [data-faq] > li'));
+
+  for (const item of itens) {
+    const gatilho = item.querySelector<HTMLButtonElement>('.faq-trigger')!;
+    const painel = item.querySelector<HTMLElement>('.faq-panel')!;
+
+    gatilho.addEventListener('click', () => {
+      const abrindo = !item.hasAttribute('data-aberto');
+
+      // fecha os outros — um por vez, como no Figma
+      if (abrindo) {
+        for (const outro of itens) {
+          if (outro === item || !outro.hasAttribute('data-aberto')) continue;
+          outro.removeAttribute('data-aberto');
+          outro.querySelector('.faq-trigger')!.setAttribute('aria-expanded', 'false');
+          const p = outro.querySelector<HTMLElement>('.faq-panel')!;
+          toggleAccordion(p, false).then(() => {
+            p.hidden = true;
+            p.style.height = '';
+          });
+        }
+
+        item.setAttribute('data-aberto', '');
+        gatilho.setAttribute('aria-expanded', 'true');
+        painel.hidden = false;
+        painel.style.height = '0px';
+        toggleAccordion(painel, true);
+      } else {
+        item.removeAttribute('data-aberto');
+        gatilho.setAttribute('aria-expanded', 'false');
+        toggleAccordion(painel, false).then(() => {
+          painel.hidden = true;
+          painel.style.height = '';
+        });
+      }
+    });
+  }
+</script>

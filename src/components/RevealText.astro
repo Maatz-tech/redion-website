@@ -1,0 +1,55 @@
+---
+/**
+ * Título que entra palavra a palavra com desfoque. As palavras são quebradas
+ * em <span> no build — nada de manipular o DOM no cliente, que causaria
+ * reflow e piscada.
+ *
+ * O `revealWords()` de lib/motion.ts é quem anima.
+ *
+ * `text` aceita `|` como marcador de quebra de linha e `**texto**` para
+ * colorir um trecho em bright-red (o design usa a 2ª linha em vermelho).
+ */
+interface Props {
+  as?: string;
+  text: string;
+  class?: string;
+  id?: string;
+}
+
+const { as: Tag = 'h2', text, class: className = '', id } = Astro.props;
+
+type Token = { palavra: string; destaque: boolean } | { quebra: true };
+
+const tokens: Token[] = [];
+for (const bloco of text.split('|')) {
+  if (tokens.length) tokens.push({ quebra: true });
+  for (const parte of bloco.split(/(\*\*[^*]+\*\*)/g)) {
+    if (!parte) continue;
+    const destaque = parte.startsWith('**');
+    const limpo = destaque ? parte.slice(2, -2) : parte;
+    for (const palavra of limpo.split(' ').filter(Boolean)) {
+      tokens.push({ palavra, destaque });
+    }
+  }
+}
+---
+
+<Tag id={id} class:list={[className]} data-reveal-words>
+  {
+    tokens.map((t, i) =>
+      'quebra' in t ? (
+        <br />
+      ) : (
+        <>
+          <span
+            data-palavra
+            class:list={['inline-block', t.destaque && 'text-bright-red']}
+          >
+            {t.palavra}
+          </span>
+          {'quebra' in (tokens[i + 1] ?? {}) ? '' : ' '}
+        </>
+      )
+    )
+  }
+</Tag>

@@ -1,0 +1,48 @@
+---
+import Accordion from '../Accordion.astro';
+import RevealText from '../RevealText.astro';
+import { PROGRAMA_ITENS } from '../../data/conteudo';
+
+/** "Conheça o Programa" — node 4010:121 (desktop) / 4060:1570 (mobile). */
+---
+
+<section id="o-programa" class="section-pad relative overflow-hidden bg-light-gray">
+  <!-- Blob vermelho no topo-direita (node 4010:174, girado 180°) -->
+  <img
+    src="/images/decor/blob.svg"
+    alt=""
+    aria-hidden="true"
+    class="pointer-events-none absolute right-0 top-0 hidden h-[260px] w-[607px] rotate-180 lg:block"
+  />
+
+  <div class="container-lp relative flex flex-col gap-8 lg:flex-row lg:gap-20">
+    <div class="flex flex-col gap-6 lg:min-w-0 lg:flex-1 lg:gap-10">
+      <RevealText as="h2" class="h2" text="Conheça o Programa" />
+      <Accordion id="acordeao-programa" itens={PROGRAMA_ITENS} class="gap-5" />
+    </div>
+
+    <div class="lg:min-w-0 lg:flex-1" data-reveal>
+      <img
+        src="/images/programa/photo.webp"
+        srcset="/images/programa/photo-760.webp 760w, /images/programa/photo-960.webp 960w, /images/programa/photo.webp 1400w"
+        sizes="(max-width: 1023px) 100vw, 560px"
+        alt="Candidata em entrevista com duas pessoas da Redion"
+        width="1400"
+        height="738"
+        loading="lazy"
+        class="h-[288px] w-full -scale-x-100 rounded-[24px] object-cover object-[8.5%_center] lg:h-[480px] lg:rounded-[48px]"
+      />
+    </div>
+  </div>
+</section>
+
+<script>
+  import { revealOnScroll, revealWords, revealFromX, drawLine } from '../../lib/motion';
+
+  revealWords('#o-programa [data-reveal-words]');
+  revealOnScroll('#o-programa [data-reveal]', { atraso: 0.1 });
+  // Itens do acordeão entram um a um pela direita
+  revealFromX('#o-programa .accordion-item', 28, 0.1, { amount: 0.3 });
+  // desenha todas as linhas (as fechadas ficam prontas, invisíveis, para quando abrirem)
+  drawLine('#o-programa .accordion-rule-line');
+</script>

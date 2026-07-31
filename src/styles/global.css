@@ -1,0 +1,321 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Fonte — Gabarito (variável, 400–600), auto-hospedada.
+   Auto-hospedar em vez de linkar o Google Fonts elimina uma
+   requisição bloqueante de render (~1,2 s no Lighthouse mobile).
+   Os dois arquivos são o mesmo variable font em subsets diferentes.
+   ============================================================ */
+
+@font-face {
+  font-family: 'Gabarito';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/gabarito-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Gabarito';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/gabarito-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ============================================================
+   Design tokens — LP Programa Trainee Redion 2026
+   Fonte de verdade: Figma qI2WSiTIULZ0kUdd5c2z8W (get_variable_defs)
+   NUNCA hard-codar cor/fonte fora deste arquivo.
+   ============================================================ */
+
+@theme {
+  /* --- Cores (1:1 com as variables do Figma) --- */
+  --color-dark-blue: #030338; /* fundo do hero/footer, texto de heading */
+  --color-body: #33334b; /* body copy */
+  --color-medium-red: #c21c17; /* cor de ação (botões) */
+  --color-bright-red: #ff3026; /* eyebrow, destaques, 2ª linha de heading */
+  --color-dark-red: #630d14; /* etapa 4 da timeline */
+  --color-medium-blue: #1a2bc2; /* etapa 2, texto do chip "Híbrido" */
+  --color-bright-blue: #5466ff; /* etapa 1 */
+  --color-blue-600: #18137b; /* setas do carrossel, ícone de citação */
+  --color-medium-gray: #dadad9; /* divisores */
+  --color-light-gray: #ededec; /* fundo de seção alternado, cards */
+
+  /* --- Derivadas: on-dark (superfícies sobre o dark-blue) --- */
+  --color-on-dark-30: rgb(255 255 255 / 0.3);
+  --color-on-dark-20: rgb(255 255 255 / 0.2);
+
+  /* --- Tipografia --- */
+  --font-sans: "Gabarito", ui-sans-serif, system-ui, sans-serif;
+
+  /* --- Layout --- */
+  --container-lp: 1200px; /* 1440 - 120*2 */
+
+  /* --- Raios ---
+     Assinatura da marca: canto assimétrico. Nos botões, canto
+     superior-esquerdo 20px + inferior-direito "folha" (1000px).
+     Nas fotos, superior-direito e inferior-esquerdo em 48px. */
+  --radius-card: 24px;
+  --radius-photo: 48px;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* compensa o header sticky nas âncoras */
+    scroll-padding-top: 96px;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-feature-settings: "dlig" 1;
+    color: var(--color-dark-blue);
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* O preflight do Tailwind v4 zera o cursor dos botões. Devolvemos o
+     pointer: sem ele as setas do carrossel e os gatilhos de acordeão/FAQ
+     não pareciam clicáveis. */
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']),
+  summary {
+    cursor: pointer;
+  }
+
+  /* Focus sempre visível — nunca remover sem substituir (Fase 9) */
+  :focus-visible {
+    outline: 3px solid var(--color-bright-red);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+/* ============================================================
+   Utilitárias semânticas
+   Se apareceu 2× no design com o mesmo estilo, mora aqui —
+   não duplicar text-[48px] font-semibold nas seções.
+   ============================================================ */
+
+@layer components {
+  .container-lp {
+    width: 100%;
+    max-width: var(--container-lp);
+    margin-inline: auto;
+  }
+
+  /* Padding padrão de seção.
+     No desktop o valor é fluido: 8.34vw dá exatamente os 120 px do comp em
+     1440 e encolhe abaixo disso. Com 120 px fixos, entre 1024 e 1440 as
+     colunas internas não caberiam e a página estourava na horizontal. */
+  .section-pad {
+    padding-inline: 24px;
+    padding-block: 64px;
+  }
+
+  @media (width >= 1024px) {
+    .section-pad {
+      padding-inline: clamp(40px, 8.34vw, 120px);
+      padding-block: 80px;
+    }
+  }
+
+  /* --- Tipografia --- */
+  .h1 {
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 1.1875;
+  }
+
+  .h2 {
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 1.1875;
+  }
+
+  .h3 {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 1.21;
+  }
+
+  @media (width >= 1024px) {
+    .h1 {
+      font-size: 48px;
+      line-height: 1.208;
+    }
+
+    .h2 {
+      font-size: 48px;
+      line-height: 1.208;
+    }
+
+    .h3 {
+      font-size: 24px;
+    }
+  }
+
+  /* Eyebrow — rótulo vermelho em caixa alta acima do heading.
+     Usa medium-red, não bright-red: em 18px normal sobre fundo claro o
+     bright-red dá 3,68:1 e reprova no AA (ver Pendências no PROJECT.md). */
+  .eyebrow {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 1.21;
+    text-transform: uppercase;
+    color: var(--color-medium-red);
+  }
+
+  .body {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.4;
+    color: var(--color-body);
+  }
+
+  .body-sm {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--color-body);
+  }
+
+  /* --- Botões ---
+     Assinatura da marca: canto superior-esquerdo 20px + canto
+     inferior-direito "folha". O padding é assimétrico de propósito
+     (pr > pl) para acomodar a curva. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.22;
+    padding: 12px 32px 12px 20px;
+    border-radius: 20px 0 1000px 0;
+    white-space: nowrap;
+    transition:
+      background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .btn:active {
+    transform: translateY(0);
+  }
+
+  @media (width >= 1024px) {
+    .btn {
+      font-size: 18px;
+      padding: 14px 40px 14px 24px;
+    }
+  }
+
+  .btn-primary {
+    background: var(--color-medium-red);
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background: var(--color-bright-red);
+  }
+
+  /* Contorno vermelho sobre fundo claro — "Fale conosco" (medium-red pelo
+     mesmo motivo do eyebrow: 18px normal precisa de 4,5:1) */
+  .btn-outline {
+    border: 1px solid var(--color-medium-red);
+    color: var(--color-medium-red);
+    border-radius: 999px;
+    padding: 14px 32px;
+  }
+
+  .btn-outline:hover {
+    background: var(--color-medium-red);
+    color: #fff;
+  }
+
+  /* Pílula branca sobre o dark-blue — CTA do hero */
+  .btn-pill-light {
+    background: #fff;
+    color: var(--color-medium-red);
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-size: 18px;
+  }
+
+  .btn-pill-light:hover {
+    background: var(--color-light-gray);
+  }
+
+  /* --- Card cinza dos requisitos: cantos superior-direito e
+     inferior-esquerdo arredondados (o inverso do botão). --- */
+  .card-soft {
+    background: var(--color-light-gray);
+    border-radius: 0 var(--radius-card) 0 var(--radius-card);
+  }
+
+  /* --- Foto com o canto assimétrico da marca --- */
+  .photo-frame {
+    overflow: hidden;
+    border-radius: 0 var(--radius-photo) 0 var(--radius-photo);
+  }
+}
+
+/* ============================================================
+   Estado inicial dos reveals
+   Só se aplica quando o JS está ativo (classe .js posta no <html>
+   pelo Base.astro). Sem JS, o conteúdo aparece normalmente.
+   ============================================================ */
+
+.js [data-reveal],
+.js [data-reveal-x],
+.js [data-reveal-stagger] > *,
+.js [data-reveal-words] > [data-palavra] {
+  opacity: 0;
+  will-change: transform, opacity, filter;
+}
+
+.js [data-draw-line] {
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal],
+  .js [data-reveal-x],
+  .js [data-reveal-stagger] > *,
+  .js [data-reveal-words] > [data-palavra] {
+    opacity: 1;
+  }
+
+  .js [data-draw-line] {
+    transform: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

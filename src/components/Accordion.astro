@@ -1,0 +1,135 @@
+---
+import Icon from './Icon.astro';
+
+/**
+ * Acordeão com ícone à esquerda do título — o padrão do Figma que aparece em
+ * "Conheça o Programa" e em "Benefícios" (Fase 6, DRY: apareceu 2×, virou
+ * componente).
+ *
+ * Um item aberto por vez. O item aberto ganha um divisor vermelho; os fechados,
+ * um divisor cinza. Cada item é um <button> com aria-expanded/aria-controls.
+ */
+export interface AccordionItem {
+  titulo: string;
+  /** Parágrafo corrido. */
+  texto?: string;
+  /** Lista com marcadores (usado em Benefícios). */
+  lista?: readonly string[];
+  icone: string;
+}
+
+interface Props {
+  id: string;
+  itens: readonly AccordionItem[];
+  class?: string;
+}
+
+const { id, itens, class: className = '' } = Astro.props;
+---
+
+<div id={id} class:list={['flex flex-col', className]} data-accordion>
+  {
+    itens.map((item, i) => (
+      <div class="accordion-item" data-reveal-x data-aberto={i === 0 ? '' : undefined}>
+        <h3>
+          <button
+            type="button"
+            class="accordion-trigger flex w-full items-center gap-3.5 text-left"
+            aria-expanded={i === 0 ? 'true' : 'false'}
+            aria-controls={`${id}-painel-${i}`}
+          >
+            <Icon name={item.icone} class="text-bright-red" />
+            <span class="h3 text-dark-blue">{item.titulo}</span>
+          </button>
+        </h3>
+
+        <div id={`${id}-painel-${i}`} class="accordion-panel" hidden={i !== 0}>
+          {item.texto && <p class="body pt-3.5">{item.texto}</p>}
+          {item.lista && (
+            <ul class="body list-disc pl-5 pt-3.5">
+              {item.lista.map((li) => (
+                <li>{li}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div class="accordion-rule mt-6">
+          <span class="accordion-rule-line" data-draw-line></span>
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .accordion-panel {
+    overflow: hidden;
+  }
+
+  .accordion-trigger .h3 {
+    transition: color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .accordion-trigger:hover .h3 {
+    color: var(--color-medium-red);
+  }
+
+  /* O divisor tem 1px cinza sempre e uma linha vermelha por cima que só
+     aparece (e se desenha) no item aberto. */
+  .accordion-rule {
+    position: relative;
+    height: 1px;
+    background: var(--color-medium-gray);
+  }
+
+  .accordion-rule-line {
+    position: absolute;
+    inset: 0;
+    background: var(--color-medium-red);
+    transform-origin: left center;
+    opacity: 0;
+    transition: opacity 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .accordion-item[data-aberto] .accordion-rule-line {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  import { toggleAccordion } from '../lib/motion';
+
+  for (const grupo of document.querySelectorAll<HTMLElement>('[data-accordion]')) {
+    const itens = Array.from(grupo.querySelectorAll<HTMLElement>('.accordion-item'));
+
+    for (const item of itens) {
+      const gatilho = item.querySelector<HTMLButtonElement>('.accordion-trigger')!;
+
+      gatilho.addEventListener('click', () => {
+        const jaAberto = item.hasAttribute('data-aberto');
+        if (jaAberto) return; // um item sempre fica aberto, como no Figma
+
+        for (const outro of itens) {
+          const g = outro.querySelector<HTMLButtonElement>('.accordion-trigger')!;
+          const p = outro.querySelector<HTMLElement>('.accordion-panel')!;
+
+          if (outro === item) {
+            outro.setAttribute('data-aberto', '');
+            g.setAttribute('aria-expanded', 'true');
+            p.hidden = false;
+            p.style.height = '0px';
+            toggleAccordion(p, true);
+          } else if (outro.hasAttribute('data-aberto')) {
+            outro.removeAttribute('data-aberto');
+            g.setAttribute('aria-expanded', 'false');
+            toggleAccordion(p, false).then(() => {
+              p.hidden = true;
+              p.style.height = '';
+            });
+          }
+        }
+      });
+    }
+  }
+</script>

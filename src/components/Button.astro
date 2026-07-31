@@ -1,0 +1,28 @@
+---
+/**
+ * Botão da marca. Variantes vindas do Figma:
+ * - `primary`  — sólido vermelho com o canto "folha" (padrão da página)
+ * - `outline`  — pílula com contorno vermelho ("Fale conosco")
+ * - `pill`     — pílula branca sobre fundo escuro (CTA do hero)
+ */
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'outline' | 'pill';
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { href, variant = 'primary', class: className = '', ...rest } = Astro.props;
+
+const variantes = {
+  primary: 'btn btn-primary',
+  outline: 'btn btn-outline',
+  pill: 'btn btn-pill-light',
+} as const;
+
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag href={href} class:list={[variantes[variant], className]} {...rest}>
+  <slot />
+</Tag>

@@ -1,0 +1,92 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Caminho da imagem OG (1200×630). Relativo a /public. */
+  ogImage?: string;
+}
+
+const {
+  title,
+  description = 'Programa Trainee Redion 2026. Inscrições abertas até 26/08/2026 — o futuro do cuidado começa com você.',
+  ogImage = '/og.jpg',
+} = Astro.props;
+
+// `site` vem do astro.config.mjs — TODO: trocar pelo domínio final (ver PROJECT.md)
+const SITE_URL = Astro.site ?? new URL('https://exemplo.com.br');
+const canonical = new URL(Astro.url.pathname, SITE_URL).href;
+const ogImageUrl = new URL(ogImage, SITE_URL).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Redion',
+  url: SITE_URL,
+  logo: new URL('/images/brand/redion-dark.svg', SITE_URL).href,
+  description:
+    'Empresa global líder em soluções de assistência, seguro viagem e benefícios para colaboradores.',
+};
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+
+    <!-- Gabarito é auto-hospedada (ver global.css): zero requisição a terceiros -->
+    <link
+      rel="preload"
+      href="/fonts/gabarito-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+<!-- LCP do hero: a foto de fundo. O preload precisa repetir srcset/sizes do
+         <img>, senão o navegador trata como recurso diferente e baixa duas vezes. -->
+    <link
+      rel="preload"
+      as="image"
+      href="/images/hero/bg-1727.webp"
+      imagesrcset="/images/hero/bg-1000.webp 1000w, /images/hero/bg-1727.webp 1727w"
+      imagesizes="(max-width: 1023px) 142vw, 1077px"
+      fetchpriority="high"
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:locale" content="pt_BR" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+
+    <!-- Sinaliza JS ativo: os reveals só nascem invisíveis se houver JS. -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+  <body class="min-h-screen overflow-x-hidden">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-medium-red focus:px-4 focus:py-2 focus:text-white"
+    >
+      Ir para o conteúdo
+    </a>
+    <slot />
+  </body>
+</html>

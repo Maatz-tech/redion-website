@@ -1,0 +1,57 @@
+---
+import Button from '../Button.astro';
+import RevealText from '../RevealText.astro';
+import { ETAPAS } from '../../data/conteudo';
+
+/**
+ * "Etapas do processo seletivo" — node 4020:489 (desktop) / 4060:1739 (mobile).
+ *
+ * Grade 3×2 no desktop, coluna única no mobile, com o bloco inteiro recortado
+ * pelos cantos da marca (superior-esquerdo + inferior-direito, 24px).
+ */
+---
+
+<section id="etapas" class="section-pad bg-white">
+  <div class="container-lp flex flex-col items-start gap-8 lg:items-center lg:gap-12">
+    <div class="flex flex-col gap-4 lg:items-center lg:text-center">
+      <p class="eyebrow" data-reveal>Etapas do processo seletivo</p>
+      <RevealText as="h2" class="h2" text="Sua jornada começa aqui" />
+    </div>
+
+    <ol
+      class="grid w-full grid-cols-1 overflow-hidden text-white lg:grid-cols-3"
+      style="border-radius: 24px 0 24px 0;"
+      data-reveal-stagger
+    >
+      {
+        ETAPAS.map((etapa, i) => (
+          <li class:list={['flex items-center gap-5 px-6 py-6 lg:py-10', etapa.cor]}>
+            <span
+              class="w-10 shrink-0 text-[64px] font-medium leading-[0.72] opacity-15"
+              aria-hidden="true"
+            >
+              {i + 1}
+            </span>
+            <span class="flex flex-col gap-1">
+              <span class="text-base leading-[1.22]">{etapa.titulo}</span>
+              <span class="text-xl leading-[1.22]">{etapa.prazo}</span>
+            </span>
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="lg:hidden" data-reveal>
+      <Button href="#o-programa">Conheça o Programa</Button>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { revealOnScroll, revealWords, revealStagger } from '../../lib/motion';
+
+  revealWords('#etapas [data-reveal-words]');
+  revealOnScroll('#etapas [data-reveal]');
+  // As 6 etapas entram em cascata — é a leitura natural de uma linha do tempo
+  revealStagger('#etapas [data-reveal-stagger]', 0.09);
+</script>

@@ -1,0 +1,72 @@
+---
+/**
+ * Wrapper único para os ícones da página.
+ *
+ * Os ícones de conteúdo (Programa, Requisitos, Benefícios) vêm exportados do
+ * próprio Figma em `icons/figma.ts`. Os de interface (menu, setas, play, +/−,
+ * LinkedIn) são traçados Lucide/Figma escritos aqui. Todos usam `currentColor`
+ * para herdar a cor do contexto. Regra da Fase 6: nada de SVG cru numa seção.
+ */
+import { FIGMA_ICONS, FIGMA_ICON_VIEWBOX } from './icons/figma';
+
+interface Props {
+  name: string;
+  size?: number;
+  class?: string;
+  /** Ícone puramente decorativo (o texto ao lado já descreve). */
+  label?: string;
+}
+
+const { name, size = 24, class: className = '', label } = Astro.props;
+
+const ICONES = {
+  menu: '<path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/>',
+  close: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  plus: '<path d="M5 12h14"/><path d="M12 5v14"/>',
+  minus: '<path d="M5 12h14"/>',
+  'chevron-left': '<path d="m15 18-6-6 6-6"/>',
+  'chevron-right': '<path d="m9 18 6-6-6-6"/>',
+} as const;
+
+/** Ícones desenhados com preenchimento em vez de traço. */
+const PREENCHIDOS = {
+  play: '<path d="M6 4.2v15.6a1 1 0 0 0 1.53.85l12.2-7.8a1 1 0 0 0 0-1.7L7.53 3.35A1 1 0 0 0 6 4.2z"/>',
+  'plus-circle':
+    '<path d="M12 0C5.383 0 0 5.383 0 12c0 6.617 5.383 12 12 12s12-5.383 12-12C24 5.383 18.617 0 12 0Zm0 23C5.935 23 1 18.065 1 12S5.935 1 12 1s11 4.935 11 11-4.935 11-11 11Zm5-11c0 .276-.224.5-.5.5h-4v4c0 .276-.224.5-.5.5s-.5-.224-.5-.5v-4h-4c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h4v-4c0-.276.224-.5.5-.5s.5.224.5.5v4h4c.276 0 .5.224.5.5Z"/>',
+  'minus-circle':
+    '<path d="M12 0C5.383 0 0 5.383 0 12c0 6.617 5.383 12 12 12s12-5.383 12-12C24 5.383 18.617 0 12 0Zm0 23C5.935 23 1 18.065 1 12S5.935 1 12 1s11 4.935 11 11-4.935 11-11 11Zm5-11c0 .276-.224.5-.5.5h-9c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h9c.276 0 .5.224.5.5Z"/>',
+  // LinkedIn — traçado exportado do próprio Figma (footer)
+  'linkedin-mark':
+    '<path d="M2.88459 0C1.29052 0 .000257898 1.29259 0 2.88304 0 4.47505 1.29026 5.76738 2.88485 5.76738 4.47505 5.76738 5.76712 4.47505 5.76712 2.88304 5.76712 1.29233 4.47479 0 2.88459 0Z"/><path d="M.396647 7.95513H5.37073V23.9587H.396647V7.95513Z"/><path d="M18.0335 7.55719C15.6139 7.55719 13.9915 8.88382 13.3274 10.1418H13.2609V7.95513H8.49027H8.49001V23.9585H13.4597V16.0415C13.4597 13.9544 13.8571 11.9327 16.4449 11.9327 18.9955 11.9327 19.0295 14.3198 19.0295 16.1754V23.9582H24V15.1804C24 10.8717 23.0703 7.55719 18.0335 7.55719Z"/>',
+} as const;
+
+const VIEWBOX: Record<string, string> = {
+  'linkedin-mark': '0 0 24 23.9587',
+  ...FIGMA_ICON_VIEWBOX,
+};
+
+/** Preenchidos: os do Figma + os de interface abaixo. Os demais são traçados. */
+const preenchido = name in PREENCHIDOS || name in FIGMA_ICONS;
+const inner =
+  FIGMA_ICONS[name] ??
+  PREENCHIDOS[name as keyof typeof PREENCHIDOS] ??
+  ICONES[name as keyof typeof ICONES];
+const viewBox = VIEWBOX[name] ?? '0 0 24 24';
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width={size}
+  height={size}
+  viewBox={viewBox}
+  fill={preenchido ? 'currentColor' : 'none'}
+  stroke={preenchido ? 'none' : 'currentColor'}
+  stroke-width={preenchido ? undefined : 2}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class:list={['shrink-0', className]}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+  set:html={inner}
+/>

@@ -1,0 +1,47 @@
+---
+import Accordion from '../Accordion.astro';
+import Button from '../Button.astro';
+import RevealText from '../RevealText.astro';
+import { BENEFICIOS_ITENS } from '../../data/conteudo';
+import { INSCRICAO_URL } from '../../data/site';
+
+/** "Benefícios" — node 4020:296 (desktop) / 4060:1668 (mobile). */
+---
+
+<section id="beneficios" class="section-pad bg-light-gray">
+  <div class="container-lp flex flex-col gap-8 lg:flex-row lg:gap-16">
+    <div class="flex flex-col gap-6 lg:min-w-0 lg:flex-1 lg:gap-10">
+      <div class="flex flex-col gap-4">
+        <p class="eyebrow" data-reveal>Benefícios</p>
+        <RevealText
+          as="h2"
+          class="h2"
+          text="Tudo o que você vai receber para impulsionar sua carreira"
+        />
+      </div>
+
+      <div class="hidden lg:block" data-reveal>
+        <Button href={INSCRICAO_URL}>Inscreva-se agora</Button>
+      </div>
+    </div>
+
+    <Accordion
+      id="acordeao-beneficios"
+      itens={BENEFICIOS_ITENS}
+      class="gap-5 lg:min-w-0 lg:flex-1 lg:pt-[30px]"
+    />
+
+    <div class="lg:hidden" data-reveal>
+      <Button href={INSCRICAO_URL}>Inscreva-se agora</Button>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { revealOnScroll, revealWords, revealFromX, drawLine } from '../../lib/motion';
+
+  revealWords('#beneficios [data-reveal-words]');
+  revealOnScroll('#beneficios [data-reveal]');
+  revealFromX('#beneficios .accordion-item', 28, 0.1, { amount: 0.3 });
+  drawLine('#beneficios .accordion-rule-line');
+</script>

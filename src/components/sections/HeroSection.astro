@@ -1,0 +1,215 @@
+---
+import Button from '../Button.astro';
+import { INSCRICAO_URL } from '../../data/site';
+
+/**
+ * Hero. Três camadas, na ordem do Figma:
+ *  1. curva vermelha decorativa (topo-esquerda);
+ *  2. foto de fundo mascarada pela curva da marca (`mask-image`);
+ *  3. recorte da pessoa em PNG por cima — é ele que "estoura" a curva.
+ *
+ * O lockup "Programa Trainee Redion" é imagem (arte fechada, aprovada pela
+ * marca); o <h1> real fica em `sr-only` para SEO e leitores de tela.
+ *
+ * Acima do fold: nada aqui entra com `opacity: 0` (mataria o LCP). O único
+ * movimento é o parallax discreto do recorte, que começa já visível.
+ */
+---
+
+<section id="top" class="relative overflow-hidden bg-dark-blue">
+  <div class="relative mx-auto max-w-[1440px] xl:min-h-[575px]">
+    <!-- 1. curva decorativa -->
+    <!-- Sem `height`: o SVG escala junto com a largura da tela. -->
+    <img
+      src="/images/hero/curve-mobile.svg"
+      alt=""
+      aria-hidden="true"
+      class="pointer-events-none absolute left-[-2px] top-0 w-[calc(100%+4px)] xl:hidden"
+    />
+    <img
+      src="/images/hero/curve.svg"
+      alt=""
+      aria-hidden="true"
+      class="pointer-events-none absolute left-[-2px] top-0 hidden h-[260px] w-[607px] xl:block"
+    />
+
+    <!-- 2 + 3. arte fotográfica -->
+    <!-- Conteúdo -->
+    <div
+      class="relative z-10 flex flex-col items-center px-6 pb-[46px] pt-14 xl:absolute xl:left-[120px] xl:top-[calc(50%-20.5px)] xl:w-[664px] xl:-translate-y-1/2 xl:items-start xl:px-0 xl:pb-0 xl:pt-0"
+    >
+      <h1 class="sr-only">
+        Programa Trainee Redion 2026 — o futuro do cuidado começa com você
+      </h1>
+
+      <img
+        src="/images/hero/lockup-800.webp"
+        srcset="
+          /images/hero/lockup-654.webp   654w,
+          /images/hero/lockup-800.webp   800w,
+          /images/hero/lockup-1080.webp 1080w
+        "
+        sizes="(max-width: 767px) 327px, (max-width: 1023px) 420px, 400px"
+        alt="Programa Trainee Redion"
+        width="1080"
+        height="586"
+        fetchpriority="high"
+        class="w-[327px] md:w-[420px] xl:w-[400px]"
+      />
+
+      <p
+        class="mt-5 w-[225px] text-center text-xl leading-[1.21] text-white xl:mt-6 xl:w-[475px] xl:text-left xl:text-2xl"
+      >
+        O futuro do cuidado começa com você.
+      </p>
+
+      <div class="mt-10 flex flex-col items-center gap-6 xl:flex-row xl:items-start">
+        <p
+          class="hidden items-center gap-2 rounded-full bg-on-dark-20 py-2 pl-2 pr-4 xl:flex"
+        >
+          <span
+            class="flex h-7 items-center rounded-full bg-white px-2.5 text-lg leading-[1.21] text-medium-blue"
+          >
+            Híbrido
+          </span>
+          <span class="text-lg leading-[1.21] text-white">Alphaville (SP)</span>
+        </p>
+
+        <Button href={INSCRICAO_URL} variant="pill" class="h-11 px-6 xl:px-4">
+          Inscreva-se agora
+        </Button>
+      </div>
+    </div>
+
+    <!--
+      Abaixo de 1280 px a arte fica em FLUXO, com o aspecto do comp (375×281),
+      em vez de uma altura fixa. A composição do comp desktop (texto à esquerda,
+      foto sangrando à direita) só é montada em xl: ela depende de posições fixas
+      calculadas para 1440 px e, entre 1024 e 1439, a foto invadia o texto. Com `h-[281px] w-full`, acima de ~533 px de viewport a
+      caixa fica mais larga que a proporção da foto (1.896), o `object-cover`
+      passa a recortar na vertical e o `object-bottom` decepava a cabeça dela.
+      O `max-h` limita o crescimento em tablet sem reintroduzir o recorte
+      vertical (só voltaria a partir de 1062 px, e aí o layout já é desktop).
+    -->
+    <div
+      class="pointer-events-none relative aspect-[375/281] max-h-[760px] w-full xl:absolute xl:bottom-0 xl:left-[577px] xl:aspect-auto xl:h-[568px] xl:max-h-none xl:w-[1077px]"
+    >
+      <!-- O fundo e o recorte precisam usar o MESMO enquadramento, senão a
+           moça aparece duas vezes (uma no fundo, outra no recorte deslocado). -->
+      <img
+        src="/images/hero/bg-1727.webp"
+        srcset="/images/hero/bg-1000.webp 1000w, /images/hero/bg-1727.webp 1727w"
+        sizes="(max-width: 1023px) 142vw, 1077px"
+        alt=""
+        aria-hidden="true"
+        width="1727"
+        height="911"
+        fetchpriority="high"
+        class="hero-mask absolute inset-0 size-full object-cover object-bottom xl:object-center"
+      />
+      <!--
+        Um único recorte serve os dois breakpoints: medindo o comp mobile
+        (extensão da blusa vermelha), o Figma usa o mesmo enquadramento do
+        desktop, só ancorado no rodapé. Antes havia um asset mobile separado,
+        reduzido para 750 px — era ele que aparecia borrado no celular.
+        1727 px é o teto do original enviado ao Figma (ver PROJECT.md).
+      -->
+      <img
+        src="/images/hero/person-1727.webp"
+        srcset="
+          /images/hero/person-1000.webp 1000w,
+          /images/hero/person-1400.webp 1400w,
+          /images/hero/person-1727.webp 1727w
+        "
+        sizes="(max-width: 1023px) 142vw, 1077px"
+        alt="Trainee da Redion em um evento da empresa"
+        width="1727"
+        height="911"
+        fetchpriority="high"
+        data-hero-person
+        class="absolute inset-0 size-full object-cover object-bottom xl:object-center"
+      />
+    </div>
+
+    <!-- Cartão de prazo (só desktop; no mobile vive na seção seguinte) -->
+    <div
+      class="absolute left-[688px] top-[100px] z-10 hidden w-[267px] flex-col items-center justify-center gap-3.5 bg-white p-4 shadow-[0_1px_2px_rgba(12,12,13,0.05)] xl:flex"
+      style="border-radius: 32px 0 32px 0;"
+      data-hero-badge
+    >
+      <p class="text-2xl leading-[1.21] text-dark-blue">Inscrições abertas</p>
+      <p class="bg-bright-red px-3 text-[32px] leading-[1.19] text-white">até 26/08/2026</p>
+      <p class="text-2xl leading-[1.21] text-dark-blue">para todo o Brasil</p>
+    </div>
+  </div>
+</section>
+
+<!-- No mobile o chip e o cartão de prazo saem do hero e viram uma faixa
+     branca logo abaixo (nodes 4135:1372 / 4135:1414 do Figma). -->
+<div class="flex flex-col items-center gap-6 bg-white px-6 pt-6 xl:hidden">
+  <p
+    class="flex items-center gap-2 rounded-full bg-[rgb(32_57_249_/_0.1)] py-2 pl-2 pr-4"
+  >
+    <span class="flex h-7 items-center rounded-full bg-white px-2.5 text-lg leading-[1.21] text-medium-blue">
+      Híbrido
+    </span>
+    <span class="text-lg text-medium-blue">Alphaville (SP)</span>
+  </p>
+
+  <div
+    class="flex w-full flex-col items-center justify-center gap-3.5 bg-light-gray p-4 shadow-[0_1px_2px_rgba(12,12,13,0.05)]"
+    style="border-radius: 32px 0 32px 0;"
+  >
+    <p class="text-lg leading-[1.21] text-dark-blue">Inscrições abertas</p>
+    <p class="bg-bright-red px-3 text-2xl leading-[1.19] text-white">até 26/08/2026</p>
+    <p class="text-lg leading-[1.21] text-dark-blue">para todo o Brasil</p>
+  </div>
+</div>
+
+<style>
+  /* As máscaras vão inline como data URI de propósito: como um arquivo
+     externo, a requisição da máscara atrasava a pintura do LCP em ~1,6 s. */
+  .hero-mask {
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22375%22%20height%3D%22281%22%20viewBox%3D%220%200%20375%20281%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20d%3D%22M375%2041.485C150.387%2063.612%2031.411%20210.704%200%20281.485L375%20281.485Z%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22375%22%20height%3D%22281%22%20viewBox%3D%220%200%20375%20281%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20d%3D%22M375%2041.485C150.387%2063.612%2031.411%20210.704%200%20281.485L375%20281.485Z%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
+    -webkit-mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+  }
+
+  @media (width >= 1280px) {
+    .hero-mask {
+      mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221077%22%20height%3D%22568%22%20viewBox%3D%220%200%201077%20568%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20d%3D%22M863%2015C346.09%2066.076%2072.288%20405.615%200%20569L1077%20569L1077%2015Z%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221077%22%20height%3D%22568%22%20viewBox%3D%220%200%201077%20568%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20d%3D%22M863%2015C346.09%2066.076%2072.288%20405.615%200%20569L1077%20569L1077%2015Z%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
+    }
+  }
+</style>
+
+<script>
+  import { EASE, prefersReducedMotion } from '../../lib/motion';
+
+  /**
+   * O hero não faz reveal (LCP). O que ele faz é um assentar de 500ms: o
+   * cartão de prazo entra com uma escala mínima e o recorte da pessoa sobe
+   * 12px. Movimento curto e caro de perceber — não é um fade genérico.
+   */
+  if (!prefersReducedMotion()) {
+    const { animate } = await import('motion');
+
+    const badge = document.querySelector<HTMLElement>('[data-hero-badge]');
+    if (badge) {
+      animate(
+        badge,
+        { opacity: [0, 1], scale: [0.94, 1], y: [-10, 0] },
+        { duration: 0.6, delay: 0.25, ease: EASE }
+      );
+    }
+
+    animate(
+      '[data-hero-person]',
+      { y: [12, 0] },
+      { duration: 0.9, ease: EASE }
+    );
+  }
+</script>

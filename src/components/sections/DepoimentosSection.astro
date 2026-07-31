@@ -1,0 +1,205 @@
+---
+import Button from '../Button.astro';
+import Icon from '../Icon.astro';
+import RevealText from '../RevealText.astro';
+import { DEPOIMENTOS } from '../../data/conteudo';
+import { INSCRICAO_URL } from '../../data/site';
+
+/**
+ * "Depoimentos" — node 4025:97 (desktop) / 4060:1796 (mobile).
+ *
+ * Carrossel em Astro puro + Framer Motion vanilla: os quatro slides ficam num
+ * trilho e o que anima é o `x` do trilho (nunca `left`/`margin`). Não há estado
+ * de React envolvido, então não precisa de ilha nem de AnimatePresence.
+ */
+---
+
+<section id="depoimentos" class="section-pad bg-light-gray">
+  <div class="container-lp flex flex-col gap-8 lg:flex-row lg:items-end lg:gap-16">
+    <div class="flex flex-col gap-6 lg:min-w-0 lg:flex-1 lg:gap-8">
+      <div class="flex flex-col gap-4">
+        <p class="eyebrow" data-reveal>Depoimentos</p>
+        <RevealText as="h2" class="h2" text="Quem faz o cuidado da Redion acontecer" />
+      </div>
+
+      <div class="flex flex-col gap-6" data-reveal-stagger>
+        <p class="text-lg font-medium leading-[1.4] text-dark-blue">
+          Uma carreira é construída pelas pessoas que caminham com você.
+        </p>
+        <p class="body">
+          Na Redion, acreditamos que o desenvolvimento acontece em todas as etapas da jornada
+          profissional. Conheça histórias de quem vive nossa cultura diariamente e descubra como
+          diferentes talentos encontraram espaço para crescer, aprender e gerar impacto.
+        </p>
+      </div>
+
+      <div data-reveal>
+        <Button href={INSCRICAO_URL}>Inscreva-se agora</Button>
+      </div>
+    </div>
+
+    <!-- Carrossel -->
+    <div
+      class="relative flex w-full min-w-0 flex-col items-center gap-6 lg:flex-1"
+      data-carrossel
+      aria-roledescription="carrossel"
+      aria-label="Depoimentos de pessoas da Redion"
+      data-reveal
+    >
+      <div class="w-full overflow-hidden">
+        <div class="flex w-full" data-trilho>
+          {
+            DEPOIMENTOS.map((dep, i) => (
+              <div
+                class="w-full shrink-0 basis-full"
+                role="group"
+                aria-roledescription="slide"
+                aria-label={`${i + 1} de ${DEPOIMENTOS.length}`}
+                aria-hidden={i === 0 ? undefined : 'true'}
+              >
+                <figure
+                  class="flex h-full flex-col gap-6 rounded-[24px] border border-black/10 bg-white p-6 lg:gap-8 lg:px-[49px] lg:py-[25px]"
+                >
+                  <div class="flex flex-col gap-4 lg:max-w-[464px]">
+                    <img
+                      src="/images/decor/quote.svg"
+                      alt=""
+                      aria-hidden="true"
+                      width="37"
+                      height="38"
+                      class="h-[38px] w-[37px]"
+                    />
+                    <blockquote class="text-lg leading-[1.5] text-body">
+                      {dep.texto}
+                    </blockquote>
+                  </div>
+
+                  <figcaption class="flex items-center gap-4">
+                    <img
+                      src={dep.foto}
+                      alt=""
+                      width="128"
+                      height="128"
+                      loading="lazy"
+                      class="size-16 shrink-0 object-cover"
+                      style="border-radius: 0 16px 0 16px;"
+                    />
+                    <span class="flex flex-col gap-1">
+                      <span class="text-xl leading-[1.4] text-medium-red">{dep.nome}</span>
+                      <span class="text-lg leading-[1.4] text-body">{dep.cargo}</span>
+                    </span>
+                  </figcaption>
+                </figure>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Setas (só desktop, como no Figma) -->
+      <button
+        type="button"
+        data-anterior
+        class="seta absolute left-[-20px] top-[134px] hidden size-10 items-center justify-center rounded-[20px] bg-medium-blue text-white lg:flex"
+        aria-label="Depoimento anterior"
+      >
+        <Icon name="chevron-left" size={20} />
+      </button>
+      <button
+        type="button"
+        data-proximo
+        class="seta absolute right-[-20px] top-[134px] hidden size-10 items-center justify-center rounded-[20px] bg-medium-blue text-white lg:flex"
+        aria-label="Próximo depoimento"
+      >
+        <Icon name="chevron-right" size={20} />
+      </button>
+
+      <!-- Indicadores -->
+      <ul class="flex items-center justify-center gap-3" data-pontos>
+        {
+          DEPOIMENTOS.map((_, i) => (
+            <li>
+              <button
+                type="button"
+                data-ponto
+                aria-label={`Ir para o depoimento ${i + 1}`}
+                aria-current={i === 0 ? 'true' : 'false'}
+                class="ponto size-3 rounded-full bg-medium-blue"
+              />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .seta {
+    transition:
+      background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .seta:hover {
+    background: var(--color-blue-600);
+    transform: scale(1.08);
+  }
+
+  .ponto {
+    opacity: 0.2;
+    transition: opacity 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .ponto[aria-current='true'] {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  import { EASE, revealOnScroll, revealStagger, revealWords, prefersReducedMotion } from '../../lib/motion';
+
+  revealWords('#depoimentos [data-reveal-words]');
+  revealOnScroll('#depoimentos [data-reveal]');
+  revealStagger('#depoimentos [data-reveal-stagger]', 0.1);
+
+  const raiz = document.querySelector<HTMLElement>('#depoimentos [data-carrossel]');
+  if (raiz) {
+    const trilho = raiz.querySelector<HTMLElement>('[data-trilho]')!;
+    const slides = Array.from(trilho.children) as HTMLElement[];
+    const pontos = Array.from(raiz.querySelectorAll<HTMLButtonElement>('[data-ponto]'));
+    let atual = 0;
+
+    async function ir(indice: number) {
+      atual = (indice + slides.length) % slides.length;
+
+      for (const [i, s] of slides.entries()) {
+        if (i === atual) s.removeAttribute('aria-hidden');
+        else s.setAttribute('aria-hidden', 'true');
+      }
+      for (const [i, p] of pontos.entries()) {
+        p.setAttribute('aria-current', String(i === atual));
+      }
+
+      const deslocamento = `-${atual * 100}%`;
+
+      if (prefersReducedMotion()) {
+        trilho.style.transform = `translateX(${deslocamento})`;
+        return;
+      }
+
+      const { animate } = await import('motion');
+      animate(trilho, { x: deslocamento }, { duration: 0.55, ease: EASE });
+    }
+
+    raiz.querySelector('[data-anterior]')!.addEventListener('click', () => ir(atual - 1));
+    raiz.querySelector('[data-proximo]')!.addEventListener('click', () => ir(atual + 1));
+    pontos.forEach((p, i) => p.addEventListener('click', () => ir(i)));
+
+    // navegação por teclado dentro do carrossel
+    raiz.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') ir(atual - 1);
+      if (e.key === 'ArrowRight') ir(atual + 1);
+    });
+  }
+</script>
