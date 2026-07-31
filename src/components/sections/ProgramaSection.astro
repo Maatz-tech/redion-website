@@ -9,7 +9,7 @@ import { PROGRAMA_ITENS } from '../../data/conteudo';
 <section id="o-programa" class="section-pad relative overflow-hidden bg-light-gray">
   <!-- Blob vermelho no topo-direita (node 4010:174, girado 180°) -->
   <img
-    src="/images/decor/blob.svg"
+    src={`${import.meta.env.BASE_URL}images/decor/blob.svg`}
     alt=""
     aria-hidden="true"
     class="pointer-events-none absolute right-0 top-0 hidden h-[260px] w-[607px] rotate-180 lg:block"
@@ -23,8 +23,8 @@ import { PROGRAMA_ITENS } from '../../data/conteudo';
 
     <div class="lg:min-w-0 lg:flex-1" data-reveal>
       <img
-        src="/images/programa/photo.webp"
-        srcset="/images/programa/photo-760.webp 760w, /images/programa/photo-960.webp 960w, /images/programa/photo.webp 1400w"
+        src={`${import.meta.env.BASE_URL}images/programa/photo.webp`}
+        srcset={`${import.meta.env.BASE_URL}images/programa/photo-760.webp 760w, ${import.meta.env.BASE_URL}images/programa/photo-960.webp 960w, ${import.meta.env.BASE_URL}images/programa/photo.webp 1400w`}
         sizes="(max-width: 1023px) 100vw, 560px"
         alt="Candidata em entrevista com duas pessoas da Redion"
         width="1400"

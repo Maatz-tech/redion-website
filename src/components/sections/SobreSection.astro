@@ -28,8 +28,8 @@ import { SOBRE_PARAGRAFOS } from '../../data/conteudo';
     <div class="lg:col-start-1 lg:row-start-1 lg:row-span-3" data-reveal>
       <figure class="photo-frame relative aspect-[327/466] w-full lg:aspect-[462/659] lg:h-auto">
         <img
-          src="/images/redion/photo.webp"
-          srcset="/images/redion/photo-700.webp 700w, /images/redion/photo.webp 1400w"
+          src={`${import.meta.env.BASE_URL}images/redion/photo.webp`}
+          srcset={`${import.meta.env.BASE_URL}images/redion/photo-700.webp 700w, ${import.meta.env.BASE_URL}images/redion/photo.webp 1400w`}
           sizes="(max-width: 1023px) 100vw, 462px"
           alt="Profissional da Redion em frente a um prédio corporativo"
           width="1400"

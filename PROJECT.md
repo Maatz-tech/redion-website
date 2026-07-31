@@ -290,6 +290,15 @@ Para regerar: `node scripts/shot.mjs <url> <largura> <saída.png>` e
 
 1. **Domínio final** — `astro.config.mjs` → `site`, hoje `https://exemplo.com.br`.
    Ele alimenta canonical, OG e sitemap.
+
+   Enquanto isso o site roda em preview no GitHub Pages
+   (https://maatz-tech.github.io/redion-website/), que serve o repo num
+   subcaminho. Por isso todo asset é referenciado como
+   `${import.meta.env.BASE_URL}images/...` e as fontes moram em `src/assets`
+   (e não em `public/`): caminho absoluto funciona local e quebra no Pages.
+   O preview vai com `noindex` para não competir com o domínio final.
+   Ao definir o domínio: trocar `site`, remover o par `site`/`base` de preview
+   e tirar `PREVIEW_NOINDEX` do workflow.
 2. **Destino do CTA "Inscreva-se agora"** — `INSCRICAO_URL` em `src/data/site.ts`
    (hoje `#inscricao`).
 3. **Destino do "Fale conosco"** — `CONTATO_URL` em `src/data/site.ts`.

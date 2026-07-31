@@ -107,6 +107,7 @@ export const ETAPAS = [
 
 /**
  * Depoimentos (node 4025:97).
+ * `foto` é relativa à raiz do site (sem barra): a seção prefixa com BASE_URL.
  * ⚠️ PLACEHOLDER — o Figma traz texto e pessoa fictícios.
  * Ver Pendências no PROJECT.md.
  */
@@ -116,28 +117,28 @@ export const DEPOIMENTOS = [
       'Depoimento de 3 a 5 linhas sobre a importância de desenvolver talentos, o papel do Programa Trainee na construção do pipeline de lideranças e o que espera dos profissionais que ingressam na Redion.',
     nome: 'Nome e sobrenome',
     cargo: 'Especialista de [Área]',
-    foto: '/images/depoimentos/pessoa-1.webp',
+    foto: 'images/depoimentos/pessoa-1.webp',
   },
   {
     texto:
       'Depoimento de 3 a 5 linhas sobre a importância de desenvolver talentos, o papel do Programa Trainee na construção do pipeline de lideranças e o que espera dos profissionais que ingressam na Redion.',
     nome: 'Nome e sobrenome',
     cargo: 'Especialista de [Área]',
-    foto: '/images/depoimentos/pessoa-1.webp',
+    foto: 'images/depoimentos/pessoa-1.webp',
   },
   {
     texto:
       'Depoimento de 3 a 5 linhas sobre a importância de desenvolver talentos, o papel do Programa Trainee na construção do pipeline de lideranças e o que espera dos profissionais que ingressam na Redion.',
     nome: 'Nome e sobrenome',
     cargo: 'Especialista de [Área]',
-    foto: '/images/depoimentos/pessoa-1.webp',
+    foto: 'images/depoimentos/pessoa-1.webp',
   },
   {
     texto:
       'Depoimento de 3 a 5 linhas sobre a importância de desenvolver talentos, o papel do Programa Trainee na construção do pipeline de lideranças e o que espera dos profissionais que ingressam na Redion.',
     nome: 'Nome e sobrenome',
     cargo: 'Especialista de [Área]',
-    foto: '/images/depoimentos/pessoa-1.webp',
+    foto: 'images/depoimentos/pessoa-1.webp',
   },
 ] as const;
 

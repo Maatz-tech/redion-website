@@ -21,13 +21,13 @@ import { INSCRICAO_URL } from '../../data/site';
     <!-- 1. curva decorativa -->
     <!-- Sem `height`: o SVG escala junto com a largura da tela. -->
     <img
-      src="/images/hero/curve-mobile.svg"
+      src={`${import.meta.env.BASE_URL}images/hero/curve-mobile.svg`}
       alt=""
       aria-hidden="true"
       class="pointer-events-none absolute left-[-2px] top-0 w-[calc(100%+4px)] xl:hidden"
     />
     <img
-      src="/images/hero/curve.svg"
+      src={`${import.meta.env.BASE_URL}images/hero/curve.svg`}
       alt=""
       aria-hidden="true"
       class="pointer-events-none absolute left-[-2px] top-0 hidden h-[260px] w-[607px] xl:block"
@@ -43,12 +43,8 @@ import { INSCRICAO_URL } from '../../data/site';
       </h1>
 
       <img
-        src="/images/hero/lockup-800.webp"
-        srcset="
-          /images/hero/lockup-654.webp   654w,
-          /images/hero/lockup-800.webp   800w,
-          /images/hero/lockup-1080.webp 1080w
-        "
+        src={`${import.meta.env.BASE_URL}images/hero/lockup-800.webp`}
+        srcset={`${import.meta.env.BASE_URL}images/hero/lockup-654.webp 654w, ${import.meta.env.BASE_URL}images/hero/lockup-800.webp 800w, ${import.meta.env.BASE_URL}images/hero/lockup-1080.webp 1080w`}
         sizes="(max-width: 767px) 327px, (max-width: 1023px) 420px, 400px"
         alt="Programa Trainee Redion"
         width="1080"
@@ -97,8 +93,8 @@ import { INSCRICAO_URL } from '../../data/site';
       <!-- O fundo e o recorte precisam usar o MESMO enquadramento, senão a
            moça aparece duas vezes (uma no fundo, outra no recorte deslocado). -->
       <img
-        src="/images/hero/bg-1727.webp"
-        srcset="/images/hero/bg-1000.webp 1000w, /images/hero/bg-1727.webp 1727w"
+        src={`${import.meta.env.BASE_URL}images/hero/bg-1727.webp`}
+        srcset={`${import.meta.env.BASE_URL}images/hero/bg-1000.webp 1000w, ${import.meta.env.BASE_URL}images/hero/bg-1727.webp 1727w`}
         sizes="(max-width: 1023px) 142vw, 1077px"
         alt=""
         aria-hidden="true"
@@ -115,12 +111,8 @@ import { INSCRICAO_URL } from '../../data/site';
         1727 px é o teto do original enviado ao Figma (ver PROJECT.md).
       -->
       <img
-        src="/images/hero/person-1727.webp"
-        srcset="
-          /images/hero/person-1000.webp 1000w,
-          /images/hero/person-1400.webp 1400w,
-          /images/hero/person-1727.webp 1727w
-        "
+        src={`${import.meta.env.BASE_URL}images/hero/person-1727.webp`}
+        srcset={`${import.meta.env.BASE_URL}images/hero/person-1000.webp 1000w, ${import.meta.env.BASE_URL}images/hero/person-1400.webp 1400w, ${import.meta.env.BASE_URL}images/hero/person-1727.webp 1727w`}
         sizes="(max-width: 1023px) 142vw, 1077px"
         alt="Trainee da Redion em um evento da empresa"
         width="1727"

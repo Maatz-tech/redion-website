@@ -29,6 +29,17 @@ node scripts/measure.mjs http://localhost:4321/ 1440
 
 Referências do Figma ficam em `docs/reference/`, capturas do build em `docs/local/`.
 
+```sh
+# simula o build do GitHub Pages (que serve o repo em /redion-website/)
+GITHUB_ACTIONS=true PREVIEW_NOINDEX=true npm run build
+node scripts/serve-base.mjs dist /redion-website 4397
+# abre http://localhost:4397/redion-website/ e confere que nada dá 404
+```
+
+Rode isso sempre que adicionar um asset: um caminho absoluto esquecido
+(`/images/...` em vez de `${import.meta.env.BASE_URL}images/...`) funciona local
+e só quebra depois do deploy.
+
 ## Estrutura
 
 ```text
@@ -51,6 +62,16 @@ src/
 
 Regra: cor, fonte e tipografia moram em `global.css`. Nenhum hex hard-coded em
 componente.
+
+## Deploy
+
+`.github/workflows/deploy.yml` publica no GitHub Pages a cada push na `main`
+(mesmo workflow dos projetos irmãos da org). O preview sai em
+**https://maatz-tech.github.io/redion-website/**, com `<meta name="robots"
+content="noindex">` enquanto o domínio final não estiver definido.
+
+Quando o domínio sair: trocar `site` no `astro.config.mjs`, remover o par
+`site`/`base` de preview e tirar o `PREVIEW_NOINDEX` do workflow.
 
 ## Antes de publicar
 

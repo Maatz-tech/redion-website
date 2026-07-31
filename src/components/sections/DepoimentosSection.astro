@@ -62,7 +62,7 @@ import { INSCRICAO_URL } from '../../data/site';
                 >
                   <div class="flex flex-col gap-4 lg:max-w-[464px]">
                     <img
-                      src="/images/decor/quote.svg"
+                      src={`${import.meta.env.BASE_URL}images/decor/quote.svg`}
                       alt=""
                       aria-hidden="true"
                       width="37"
@@ -76,7 +76,7 @@ import { INSCRICAO_URL } from '../../data/site';
 
                   <figcaption class="flex items-center gap-4">
                     <img
-                      src={dep.foto}
+                      src={`${import.meta.env.BASE_URL}${dep.foto}`}
                       alt=""
                       width="128"
                       height="128"
