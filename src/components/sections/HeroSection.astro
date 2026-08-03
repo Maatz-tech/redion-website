@@ -71,7 +71,14 @@ import { INSCRICAO_URL } from '../../data/site';
           <span class="text-lg leading-[1.21] text-white">Alphaville (SP)</span>
         </p>
 
-        <Button href={INSCRICAO_URL} variant="pill" class="h-11 px-6 xl:px-4">
+        <!-- Mobile/tablet: 24 px a pedido do cliente. Sem `h-11` aqui — a altura
+             fixa cortaria a linha de 24 px; o padding da pílula resolve. No xl
+             volta ao tamanho do comp (18 px na altura de 44 px). -->
+        <Button
+          href={INSCRICAO_URL}
+          variant="pill"
+          class="px-6 text-2xl leading-[1.22] xl:h-11 xl:px-4 xl:text-lg"
+        >
           Inscreva-se agora
         </Button>
       </div>
