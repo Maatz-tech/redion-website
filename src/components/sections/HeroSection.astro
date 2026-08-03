@@ -1,5 +1,6 @@
 ---
 import Button from '../Button.astro';
+import Icon from '../Icon.astro';
 import { INSCRICAO_URL } from '../../data/site';
 
 /**
@@ -16,27 +17,34 @@ import { INSCRICAO_URL } from '../../data/site';
  */
 ---
 
+<!--
+  Breakpoint: `lg` (1024px), o mesmo do header e do resto das seções — abaixo
+  disso é o empilhado de tablet/mobile. A composição do comp (texto à esquerda,
+  foto sangrando à direita) foi desenhada em 1440; para caber a partir de 1024
+  as medidas fixas viram fluidas (`min(Xvw, comp)`), com a mesma lógica do
+  `.section-pad`: o vw dá exatamente o valor do comp em 1440 e encolhe abaixo.
+-->
 <section id="top" class="relative overflow-hidden bg-dark-blue">
-  <div class="relative mx-auto max-w-[1440px] xl:min-h-[575px]">
+  <div class="relative mx-auto max-w-[1440px] lg:min-h-[min(39.93vw,575px)]">
     <!-- 1. curva decorativa -->
     <!-- Sem `height`: o SVG escala junto com a largura da tela. -->
     <img
       src={`${import.meta.env.BASE_URL}images/hero/curve-mobile.svg`}
       alt=""
       aria-hidden="true"
-      class="pointer-events-none absolute left-[-2px] top-0 w-[calc(100%+4px)] xl:hidden"
+      class="pointer-events-none absolute left-[-2px] top-0 w-[calc(100%+4px)] lg:hidden"
     />
     <img
       src={`${import.meta.env.BASE_URL}images/hero/curve.svg`}
       alt=""
       aria-hidden="true"
-      class="pointer-events-none absolute left-[-2px] top-0 hidden h-[260px] w-[607px] xl:block"
+      class="pointer-events-none absolute left-[-2px] top-0 hidden lg:block lg:h-[min(18.06vw,260px)] lg:w-[min(42.15vw,607px)]"
     />
 
     <!-- 2 + 3. arte fotográfica -->
     <!-- Conteúdo -->
     <div
-      class="relative z-10 flex flex-col items-center px-6 pb-[46px] pt-14 xl:absolute xl:left-[120px] xl:top-[calc(50%-20.5px)] xl:w-[664px] xl:-translate-y-1/2 xl:items-start xl:px-0 xl:pb-0 xl:pt-0"
+      class="relative z-10 flex flex-col items-center px-6 pb-[46px] pt-14 lg:absolute lg:left-[clamp(40px,8.34vw,120px)] lg:top-[calc(50%-20.5px)] lg:w-[min(46.11vw,664px)] lg:-translate-y-1/2 lg:items-start lg:px-0 lg:pb-0 lg:pt-0"
     >
       <h1 class="sr-only">
         Programa Trainee Redion 2026 — o futuro do cuidado começa com você
@@ -50,34 +58,35 @@ import { INSCRICAO_URL } from '../../data/site';
         width="1080"
         height="586"
         fetchpriority="high"
-        class="w-[327px] md:w-[420px] xl:w-[400px]"
+        class="w-[327px] md:w-[420px] lg:w-[clamp(320px,27.78vw,400px)]"
       />
 
       <p
-        class="mt-5 w-[225px] text-center text-xl leading-[1.21] text-white xl:mt-6 xl:w-[475px] xl:text-left xl:text-2xl"
+        class="mt-5 w-[225px] text-center text-xl leading-[1.21] text-white lg:mt-6 lg:w-[min(32.99vw,475px)] lg:text-left lg:text-2xl"
       >
-        O futuro do cuidado começa com você.
+        O futuro do cuidado começa com você!
       </p>
 
-      <div class="mt-10 flex flex-col items-center gap-6 xl:flex-row xl:items-start">
+      <div class="mt-10 flex flex-col items-center gap-6 lg:flex-row lg:items-center">
+        <!-- Rótulo informativo, não um controle. A pílula branca interna lia
+             como botão ao lado do CTA; trocada por um ícone de local + texto
+             corrido, que é o vocabulário de "metadado", não de ação.
+             `h-11` = a altura do CTA ao lado: com alturas diferentes as duas
+             pílulas ficavam desalinhadas na linha. -->
         <p
-          class="hidden items-center gap-2 rounded-full bg-on-dark-20 py-2 pl-2 pr-4 xl:flex"
+          class="hidden cursor-default items-center gap-2 rounded-full bg-on-dark-20 py-2 pl-3 pr-4 text-lg leading-[1.21] text-white lg:flex lg:h-11"
         >
-          <span
-            class="flex h-7 items-center rounded-full bg-white px-2.5 text-lg leading-[1.21] text-medium-blue"
-          >
-            Híbrido
-          </span>
-          <span class="text-lg leading-[1.21] text-white">Alphaville (SP)</span>
+          <Icon name="map-pin" size={20} />
+          <span>Híbrido &middot; Alphaville (SP)</span>
         </p>
 
         <!-- Mobile/tablet: 24 px a pedido do cliente. Sem `h-11` aqui — a altura
-             fixa cortaria a linha de 24 px; o padding da pílula resolve. No xl
+             fixa cortaria a linha de 24 px; o padding da pílula resolve. No lg
              volta ao tamanho do comp (18 px na altura de 44 px). -->
         <Button
           href={INSCRICAO_URL}
           variant="pill"
-          class="px-6 text-2xl leading-[1.22] xl:h-11 xl:px-4 xl:text-lg"
+          class="px-6 text-2xl leading-[1.22] lg:h-11 lg:px-4 lg:text-lg"
         >
           Inscreva-se agora
         </Button>
@@ -85,30 +94,34 @@ import { INSCRICAO_URL } from '../../data/site';
     </div>
 
     <!--
-      Abaixo de 1280 px a arte fica em FLUXO, com o aspecto do comp (375×281),
-      em vez de uma altura fixa. A composição do comp desktop (texto à esquerda,
-      foto sangrando à direita) só é montada em xl: ela depende de posições fixas
-      calculadas para 1440 px e, entre 1024 e 1439, a foto invadia o texto. Com `h-[281px] w-full`, acima de ~533 px de viewport a
-      caixa fica mais larga que a proporção da foto (1.896), o `object-cover`
-      passa a recortar na vertical e o `object-bottom` decepava a cabeça dela.
-      O `max-h` limita o crescimento em tablet sem reintroduzir o recorte
-      vertical (só voltaria a partir de 1062 px, e aí o layout já é desktop).
+      Abaixo de 1024 px a arte fica em FLUXO, com uma proporção própria (375×340)
+      em vez de uma altura fixa. Como a caixa é mais alta que a foto (1.896), o
+      `object-cover` escala pela ALTURA — então é a proporção da caixa que
+      controla o zoom: 340 no lugar dos 281 do comp aumenta a moça em ~21% e dá
+      mais área para ela. O recorte extra sai todo na horizontal, e o
+      `object-position` em 40% puxa o quadro para a esquerda da foto, que é o
+      que traz a moça para o meio da tela (ela não está centrada no original).
+      O `overflow-hidden` segura o deslocamento de 4% (ver `translate-y` nas
+      imagens) dentro da caixa; sem ele a foto invadiria a faixa branca abaixo.
+      O `max-h` limita o crescimento em tablet.
+      De lg para cima a arte é a do comp (577/1077/568 em 1440), fluida em vw
+      para não invadir o texto entre 1024 e 1439.
     -->
     <div
-      class="pointer-events-none relative aspect-[375/281] max-h-[760px] w-full xl:absolute xl:bottom-0 xl:left-[577px] xl:aspect-auto xl:h-[568px] xl:max-h-none xl:w-[1077px]"
+      class="pointer-events-none relative aspect-[375/340] max-h-[760px] w-full overflow-hidden lg:absolute lg:bottom-0 lg:left-[min(40.07vw,577px)] lg:aspect-auto lg:h-[min(39.44vw,568px)] lg:max-h-none lg:w-[min(74.79vw,1077px)]"
     >
       <!-- O fundo e o recorte precisam usar o MESMO enquadramento, senão a
            moça aparece duas vezes (uma no fundo, outra no recorte deslocado). -->
       <img
         src={`${import.meta.env.BASE_URL}images/hero/bg-1727.webp`}
         srcset={`${import.meta.env.BASE_URL}images/hero/bg-1000.webp 1000w, ${import.meta.env.BASE_URL}images/hero/bg-1727.webp 1727w`}
-        sizes="(max-width: 1023px) 142vw, 1077px"
+        sizes="(max-width: 1023px) 172vw, (max-width: 1440px) 75vw, 1077px"
         alt=""
         aria-hidden="true"
         width="1727"
         height="911"
         fetchpriority="high"
-        class="hero-mask absolute inset-0 size-full object-cover object-bottom xl:object-center"
+        class="hero-mask absolute inset-0 size-full translate-y-[4%] object-cover object-[40%_100%] lg:translate-y-0 lg:object-center"
       />
       <!--
         Um único recorte serve os dois breakpoints: medindo o comp mobile
@@ -120,19 +133,19 @@ import { INSCRICAO_URL } from '../../data/site';
       <img
         src={`${import.meta.env.BASE_URL}images/hero/person-1727.webp`}
         srcset={`${import.meta.env.BASE_URL}images/hero/person-1000.webp 1000w, ${import.meta.env.BASE_URL}images/hero/person-1400.webp 1400w, ${import.meta.env.BASE_URL}images/hero/person-1727.webp 1727w`}
-        sizes="(max-width: 1023px) 142vw, 1077px"
+        sizes="(max-width: 1023px) 172vw, (max-width: 1440px) 75vw, 1077px"
         alt="Trainee da Redion em um evento da empresa"
         width="1727"
         height="911"
         fetchpriority="high"
         data-hero-person
-        class="absolute inset-0 size-full object-cover object-bottom xl:object-center"
+        class="absolute inset-0 size-full translate-y-[4%] object-cover object-[40%_100%] lg:translate-y-0 lg:object-center"
       />
     </div>
 
     <!-- Cartão de prazo (só desktop; no mobile vive na seção seguinte) -->
     <div
-      class="absolute left-[688px] top-[100px] z-10 hidden w-[267px] flex-col items-center justify-center gap-3.5 bg-white p-4 shadow-[0_1px_2px_rgba(12,12,13,0.05)] xl:flex"
+      class="absolute z-10 hidden w-[267px] flex-col items-center justify-center gap-3.5 bg-white p-4 shadow-[0_1px_2px_rgba(12,12,13,0.05)] lg:left-[min(47.78vw,688px)] lg:top-[min(6.94vw,100px)] lg:flex"
       style="border-radius: 32px 0 32px 0;"
       data-hero-badge
     >
@@ -143,16 +156,14 @@ import { INSCRICAO_URL } from '../../data/site';
   </div>
 </section>
 
-<!-- No mobile o chip e o cartão de prazo saem do hero e viram uma faixa
+<!-- No mobile/tablet o chip e o cartão de prazo saem do hero e viram uma faixa
      branca logo abaixo (nodes 4135:1372 / 4135:1414 do Figma). -->
-<div class="flex flex-col items-center gap-6 bg-white px-6 pt-6 xl:hidden">
+<div class="flex flex-col items-center gap-6 bg-white px-6 pt-6 lg:hidden">
   <p
-    class="flex items-center gap-2 rounded-full bg-[rgb(32_57_249_/_0.1)] py-2 pl-2 pr-4"
+    class="flex cursor-default items-center gap-2 rounded-full bg-[rgb(32_57_249_/_0.1)] py-2 pl-3 pr-4 text-lg leading-[1.21] text-medium-blue"
   >
-    <span class="flex h-7 items-center rounded-full bg-white px-2.5 text-lg leading-[1.21] text-medium-blue">
-      Híbrido
-    </span>
-    <span class="text-lg text-medium-blue">Alphaville (SP)</span>
+    <Icon name="map-pin" size={20} />
+    <span>Híbrido &middot; Alphaville (SP)</span>
   </p>
 
   <div
@@ -177,7 +188,7 @@ import { INSCRICAO_URL } from '../../data/site';
     -webkit-mask-repeat: no-repeat;
   }
 
-  @media (width >= 1280px) {
+  @media (width >= 1024px) {
     .hero-mask {
       mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221077%22%20height%3D%22568%22%20viewBox%3D%220%200%201077%20568%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20d%3D%22M863%2015C346.09%2066.076%2072.288%20405.615%200%20569L1077%20569L1077%2015Z%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
       -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221077%22%20height%3D%22568%22%20viewBox%3D%220%200%201077%20568%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20d%3D%22M863%2015C346.09%2066.076%2072.288%20405.615%200%20569L1077%20569L1077%2015Z%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
