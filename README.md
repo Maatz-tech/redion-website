@@ -25,6 +25,10 @@ node scripts/shot.mjs http://localhost:4321/ 375  docs/local/mobile.png
 
 # altura de cada seção, para comparar com o Figma
 node scripts/measure.mjs http://localhost:4321/ 1440
+
+# regera favicon.svg + favicon-32.png + apple-touch-icon.png a partir do
+# traçado da asa em images/brand/redion-dark.svg
+node scripts/favicon.mjs
 ```
 
 Referências do Figma ficam em `docs/reference/`, capturas do build em `docs/local/`.
