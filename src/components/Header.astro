@@ -9,7 +9,11 @@ import { NAV_LINKS, INSCRICAO_URL } from '../data/site';
   class="sticky top-0 z-50 bg-white transition-shadow duration-300 data-[scrolled]:shadow-[0_1px_24px_rgba(3,3,56,0.08)]"
 >
   <div
-    class="flex items-center justify-between px-6 py-4 lg:px-[clamp(40px,8.34vw,120px)] lg:py-6"
+    {/* py-4 no desktop (era py-6): o header sticky passa de 94 para 78 px.
+        Quem manda na altura é o CTA (46 px), não o logo. Mexer aqui pede
+        mexer no `scroll-padding-top` do global.css, que compensa o sticky
+        nas âncoras. */}
+    class="flex items-center justify-between px-6 py-4 lg:px-[clamp(40px,8.34vw,120px)] lg:py-4"
   >
     <a href="#top" class="shrink-0" aria-label="Redion — página inicial">
       <img

@@ -78,8 +78,8 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    /* compensa o header sticky nas âncoras */
-    scroll-padding-top: 96px;
+    /* compensa o header sticky nas âncoras (78 px no desktop + folga) */
+    scroll-padding-top: 88px;
   }
 
   body {
