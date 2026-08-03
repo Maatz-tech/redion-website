@@ -71,8 +71,11 @@ import { SOBRE_PARAGRAFOS } from '../../data/conteudo';
     transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
+  /* Só translateY: a centralização vem do `-translate-x-1/2`, que no Tailwind v4
+     usa a propriedade `translate`. Ela compõe com `transform`, então repetir o
+     -50% aqui deslocava o botão em -100% e ele pulava para o lado no hover. */
   .video-btn:hover {
-    transform: translate(-50%, -3px);
+    transform: translateY(-3px);
   }
 </style>
 
