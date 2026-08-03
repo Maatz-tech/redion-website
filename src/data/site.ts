@@ -35,6 +35,10 @@ export const SOCIAL_LINKS = [
   },
 ] as const;
 
+/** Sites institucionais atrás dos dois logos do rodapé. */
+export const REDION_URL = comSource('https://www.redion.com/br/');
+export const EURECA_URL = comSource('https://eureca.me/');
+
 /** Assinatura da agência no rodapé. */
 export const MAATZ_URL =
   'https://maatz.com.br/?utm_source=redion-eureca&utm_medium=footer&utm_campaign=portfolio';

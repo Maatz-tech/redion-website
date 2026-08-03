@@ -1,49 +1,75 @@
 ---
 import Icon from './Icon.astro';
-import { LEGAL_LINKS, SOCIAL_LINKS, MAATZ_URL } from '../data/site';
+import { LEGAL_LINKS, SOCIAL_LINKS, MAATZ_URL, REDION_URL, EURECA_URL } from '../data/site';
 ---
 
 <footer class="bg-dark-blue">
   <div
-    class="flex flex-col items-center gap-10 px-6 py-10 lg:flex-row lg:items-start lg:justify-between lg:px-[120px] lg:py-20"
+    class="flex flex-col items-center gap-10 px-6 py-10 lg:flex-row lg:items-center lg:justify-between lg:px-[120px] lg:py-20"
   >
     <!-- gap-3 no mobile: com gap-6 os dois logos + divisor davam 335 px numa
          faixa de 327 e o "eureca" era cortado na direita. -->
     <div class="flex w-full items-center justify-center gap-3 lg:w-auto lg:gap-6">
-      <img
-        src={`${import.meta.env.BASE_URL}images/brand/redion-light.svg`}
-        alt="Redion"
-        width="186"
-        height="32"
-        class="h-auto w-[45%] max-w-[148px] lg:w-[186px] lg:max-w-none"
-      />
+      <a
+        href={REDION_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="logo-link w-[45%] max-w-[148px] lg:w-[186px] lg:max-w-none"
+      >
+        <img
+          src={`${import.meta.env.BASE_URL}images/brand/redion-light.svg`}
+          alt="Redion"
+          width="186"
+          height="32"
+          class="h-auto w-full"
+        />
+      </a>
       <span class="h-9 w-px shrink-0 bg-on-dark-30 lg:h-[43px]" aria-hidden="true"></span>
-      <img
-        src={`${import.meta.env.BASE_URL}images/brand/eureca-light.webp`}
-        alt="eureca"
-        width="164"
-        height="30"
-        class="h-auto w-[45%] max-w-[147px] object-contain lg:w-[164px] lg:max-w-none"
-      />
+      <a
+        href={EURECA_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="logo-link w-[45%] max-w-[147px] lg:w-[164px] lg:max-w-none"
+      >
+        <img
+          src={`${import.meta.env.BASE_URL}images/brand/eureca-light.webp`}
+          alt="eureca"
+          width="164"
+          height="30"
+          class="h-auto w-full object-contain"
+        />
+      </a>
     </div>
 
-    <ul class="flex items-center gap-3.5">
-      {
-        SOCIAL_LINKS.map((social) => (
-          <li>
-            <a
-              href={social.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="social-link flex size-14 items-center justify-center rounded-full bg-white text-dark-blue"
-              aria-label={social.label}
-            >
-              <Icon name="linkedin-mark" />
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+    <!-- Selo GPTW + LinkedIn na mesma linha, centrados um pelo outro. O SVG do
+         selo é vertical (800×1364), por isso vem dimensionado pela altura. -->
+    <div class="flex items-center gap-5">
+      <img
+        src={`${import.meta.env.BASE_URL}images/brand/selo-gptw-redion.svg`}
+        alt="Selo Great Place to Work — Redion certificada"
+        width="800"
+        height="1364"
+        class="h-16 w-auto lg:h-[72px]"
+      />
+
+      <ul class="flex items-center gap-3.5">
+        {
+          SOCIAL_LINKS.map((social) => (
+            <li>
+              <a
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="social-link flex size-14 items-center justify-center rounded-full bg-white text-dark-blue"
+                aria-label={social.label}
+              >
+                <Icon name="linkedin-mark" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
   </div>
 
   <div class="bg-light-gray px-6 py-6 lg:px-[120px]">
@@ -102,6 +128,19 @@ import { LEGAL_LINKS, SOCIAL_LINKS, MAATZ_URL } from '../data/site';
   }
 
   .assinatura:hover img {
+    opacity: 0.75;
+    transform: translateY(-1px);
+  }
+
+  /* Logos institucionais: o mesmo hover discreto da assinatura da agência. */
+  .logo-link {
+    display: block;
+    transition:
+      opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .logo-link:hover {
     opacity: 0.75;
     transform: translateY(-1px);
   }
