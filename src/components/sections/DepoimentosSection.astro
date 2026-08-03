@@ -101,9 +101,13 @@ import { INSCRICAO_URL } from '../../data/site';
                   </div>
 
                   <figcaption class="flex items-center gap-4">
+                    {/* Decorativa: o nome e o cargo estão no texto ao lado, dentro
+                        do mesmo figcaption. Com `alt="Foto de <nome>"` o leitor de
+                        tela anunciava o nome duas vezes seguidas. */}
                     <img
                       src={`${import.meta.env.BASE_URL}${dep.foto}`}
-                      alt={`Foto de ${dep.nome}`}
+                      alt=""
+                      aria-hidden="true"
                       width="208"
                       height="208"
                       loading="lazy"
