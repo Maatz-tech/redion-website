@@ -7,12 +7,28 @@ import gabaritoLatin from '../assets/fonts/gabarito-latin.woff2?url';
 interface Props {
   title: string;
   description?: string;
+  /**
+   * Título/descrição do card de compartilhamento. Separados do title/description
+   * de propósito: a busca e o card social têm públicos e limites diferentes — o
+   * title do Google leva a marca e o gancho de conversão, o card do
+   * WhatsApp/LinkedIn é mais curto e mais direto. Sem valor, caem no par de SEO.
+   */
+  ogTitle?: string;
+  ogDescription?: string;
   /** Caminho da imagem OG (1200×630), relativo à raiz do site (sem barra). */
   ogImage?: string;
 }
 
-const { title, description = 'Programa Trainee Redion 2026. Inscrições abertas até 26/08/2026 — o futuro do cuidado começa com você.', ogImage = 'og.jpg' } =
-  Astro.props;
+const {
+  title,
+  description = 'Programa Trainee Redion 2026. Inscrições abertas até 26/08/2026 — o futuro do cuidado começa com você.',
+  ogTitle,
+  ogDescription,
+  ogImage = 'opengraph.jpg',
+} = Astro.props;
+
+const tituloSocial = ogTitle ?? title;
+const descricaoSocial = ogDescription ?? description;
 
 /** Prefixo do site. Vale '/' local e '/redion-website/' no GitHub Pages. */
 const BASE = import.meta.env.BASE_URL;
@@ -90,16 +106,21 @@ const jsonLd = {
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:title" content={tituloSocial} />
+    <meta property="og:description" content={descricaoSocial} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImageUrl} />
+    <!-- Dimensões declaradas: sem elas o WhatsApp/LinkedIn às vezes mostram o
+         card pequeno na primeira vez, antes de baixar a imagem. -->
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Programa Trainee Redion 2026" />
     <meta property="og:locale" content="pt_BR" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:title" content={tituloSocial} />
+    <meta name="twitter:description" content={descricaoSocial} />
     <meta name="twitter:image" content={ogImageUrl} />
 
     <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />

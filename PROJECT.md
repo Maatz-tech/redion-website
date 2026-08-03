@@ -351,10 +351,9 @@ Para regerar: `node scripts/shot.mjs <url> <largura> <saída.png>` e
    um ambiente que promove dese…". Encerramos a frase no ponto anterior, sem
    inventar o fecho — falta confirmar o final e se existe um 3º parágrafo (a
    versão do Figma tinha um sobre o propósito "You Live, We Care").
-8. **Textos de dois itens do acordeão "Conheça o Programa"** — "Áreas de
-   atuação" e "A oportunidade". No Figma os painéis estão ocultos e repetem o
-   mesmo parágrafo de "A Jornada"; escrevemos um texto provisório coerente com o
-   programa, marcado com `TODO` em `src/data/conteudo.ts`.
+8. ~~Textos de dois itens do acordeão "Conheça o Programa"~~ — **resolvido em
+   03/08/2026:** o cliente enviou a lista oficial de "Áreas de atuação" (sete
+   itens, agora em `lista`) e o texto de "A oportunidade".
 9. **Três respostas do FAQ** — só a primeira tem texto no Figma. As outras três
    estão provisórias, também marcadas com `TODO`.
 10. **Confirmar o vermelho dos rótulos com o designer.** O comp usa
@@ -369,5 +368,19 @@ Para regerar: `node scripts/shot.mjs <url> <largura> <saída.png>` e
    1727 × 911 px. Para ficar realmente nítido em tela retina seria preciso o
    original em **≥ 2600 px de largura** (a foto de fundo e o recorte da pessoa
    em PNG com transparência). Hoje sobra 1,25× de ampliação no desktop retina.
-12. **Imagem OG** — `public/og.jpg` foi gerada a partir do hero. Se a marca tiver
-   uma peça própria de 1200×630, é só substituir.
+12. ~~Imagem OG~~ — **resolvido em 03/08/2026:** o cliente enviou a peça própria
+   (`public/opengraph.jpg`, 1200×630), que substituiu o `og.jpg` gerado a partir
+   do hero. O caminho é o default do `Base.astro`.
+13. **Foto da seção "A Redion" em resolução maior — a mais crítica das três.**
+   O original tem 1400 × 933 px, mas o quadro é retrato (0,70) e a foto é
+   paisagem (1,50): o `object-cover` escala pela ALTURA, então a imagem é
+   *pintada* com ~1024 px de largura no desktop (462 px de quadro × 2,2) e
+   ~46% dos pixels da largura são jogados fora no recorte. Em retina o alvo é
+   **≥ 2048 px** e temos 1400 — daí a suavidade que o cliente apontou.
+   Feito em 03/08/2026: (a) o `sizes` declarava os 462 px do quadro e fazia o
+   browser baixar a versão de 700 e esticar para 1024 — corrigido para
+   `1024px`; (b) `photo-2100.webp` é uma ampliação Lanczos + unsharp do 1400
+   (não cria detalhe, mas rende melhor que a ampliação do browser).
+   **O que resolve de fato:** o original em ≥ 2000 px — de preferência já
+   recortado em RETRATO (~1400 × 2000), porque aí nenhum pixel se perde no
+   `object-cover` e o arquivo ainda fica mais leve que o de hoje.
