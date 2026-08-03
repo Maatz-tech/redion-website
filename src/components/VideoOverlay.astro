@@ -1,0 +1,192 @@
+---
+import Icon from './Icon.astro';
+
+/**
+ * Overlay de vídeo do YouTube.
+ *
+ * Usa `<dialog>` nativo em vez de uma div com z-index: o `showModal()` já dá
+ * de graça o trap de foco, o fechamento no Esc, o `::backdrop` e o resto da
+ * página inerte para leitores de tela. (Fase 6 do playbook: HTML nativo antes
+ * de JS.)
+ *
+ * O iframe é injetado só na abertura e removido no fechamento. Isso mantém
+ * zero requisição ao YouTube no carregamento da página — o embed sozinho
+ * custaria ~800 KB e derrubaria o score de performance — e faz o vídeo parar
+ * de tocar ao fechar, sem precisar da API do player.
+ *
+ * Abre a partir de qualquer elemento com `data-video-abrir`.
+ */
+interface Props {
+  /** ID do vídeo no YouTube (o `v=` da URL). */
+  id: string;
+  /** Título acessível do diálogo. */
+  titulo?: string;
+}
+
+const { id, titulo = 'Vídeo institucional da Redion' } = Astro.props;
+---
+
+<dialog id="video-overlay" aria-label={titulo} data-video-id={id}>
+  <div class="moldura">
+    <button type="button" data-video-fechar class="fechar" aria-label="Fechar vídeo">
+      <Icon name="close" size={24} />
+    </button>
+    <div class="palco" data-video-palco></div>
+  </div>
+</dialog>
+
+<style>
+  #video-overlay {
+    width: min(92vw, 1100px);
+    max-width: none;
+    max-height: none;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    /* zera o centro padrão do dialog e centraliza na viewport */
+    margin: auto;
+    overflow: visible;
+  }
+
+  #video-overlay::backdrop {
+    background: rgb(3 3 56 / 0.88);
+    backdrop-filter: blur(6px);
+  }
+
+  /* O recorte fica no .palco, não na moldura: com `overflow: hidden` aqui, o
+     `showModal()` — que foca o botão de fechar — rolava o container para
+     revelar qualquer coisa posicionada fora dele e arrastava o vídeo junto. */
+  .moldura {
+    position: relative;
+    border-radius: 0 24px 0 24px;
+    box-shadow: 0 24px 80px rgb(3 3 56 / 0.5);
+  }
+
+  .palco {
+    aspect-ratio: 16 / 9;
+    border-radius: inherit;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .palco :global(iframe) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .fechar {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: rgb(3 3 56 / 0.6);
+    color: #fff;
+    transition:
+      background-color 200ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .fechar:hover {
+    background: var(--color-medium-red);
+    transform: scale(1.06);
+  }
+
+  /* Fora do quadro quando há margem lateral de sobra: dentro, o X cobre a
+     engrenagem do player. O corte é 1264px porque aí o diálogo já está travado
+     em 1100px e sobram (1264-1100)/2 = 82px de cada lado — mais que os 56 do
+     deslocamento. Abaixo disso ele volta para dentro, onde nunca sai da tela.
+     Seguro agora que o recorte saiu da .moldura para o .palco. */
+  @media (width >= 1264px) {
+    .fechar {
+      right: -56px;
+      top: 0;
+      background: rgb(255 255 255 / 0.12);
+    }
+  }
+</style>
+
+<script>
+  import { EASE, prefersReducedMotion } from '../lib/motion';
+
+  const overlay = document.querySelector<HTMLDialogElement>('#video-overlay');
+
+  if (overlay) {
+    const palco = overlay.querySelector<HTMLElement>('[data-video-palco]')!;
+    const moldura = overlay.querySelector<HTMLElement>('.moldura')!;
+    const idVideo = overlay.dataset.videoId!;
+    let gatilhoAtivo: HTMLElement | null = null;
+
+    /** youtube-nocookie: não grava cookie de rastreio em quem só abriu a página. */
+    function montarIframe() {
+      const params = new URLSearchParams({
+        autoplay: '1',
+        rel: '0',
+        modestbranding: '1',
+        playsinline: '1',
+        hl: 'pt-BR',
+      });
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${idVideo}?${params}`;
+      iframe.title = overlay!.getAttribute('aria-label') ?? 'Vídeo';
+      iframe.allow =
+        'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.allowFullscreen = true;
+      palco.replaceChildren(iframe);
+    }
+
+    async function abrir(gatilho: HTMLElement) {
+      gatilhoAtivo = gatilho;
+      montarIframe();
+      overlay!.showModal();
+      // o showModal deixa o fundo inerte, mas não trava o scroll
+      document.documentElement.style.overflow = 'hidden';
+
+      if (prefersReducedMotion()) return;
+      const { animate } = await import('motion');
+      animate(moldura, { opacity: [0, 1], scale: [0.96, 1] }, { duration: 0.32, ease: EASE });
+    }
+
+    async function fechar() {
+      if (!prefersReducedMotion()) {
+        const { animate } = await import('motion');
+        await animate(moldura, { opacity: [1, 0], scale: [1, 0.97] }, { duration: 0.2, ease: EASE });
+      }
+      overlay!.close();
+    }
+
+    for (const gatilho of document.querySelectorAll<HTMLElement>('[data-video-abrir]')) {
+      gatilho.addEventListener('click', () => abrir(gatilho));
+    }
+
+    overlay.querySelector('[data-video-fechar]')!.addEventListener('click', fechar);
+
+    // clique no backdrop: o alvo é o próprio <dialog> só quando é fora da moldura
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) fechar();
+    });
+
+    // o Esc dispara `cancel`; interceptamos para animar a saída
+    overlay.addEventListener('cancel', (e) => {
+      e.preventDefault();
+      fechar();
+    });
+
+    // limpeza única, aconteça o fechamento por onde acontecer
+    overlay.addEventListener('close', () => {
+      palco.replaceChildren(); // remove o iframe → o vídeo para
+      moldura.style.opacity = '';
+      moldura.style.transform = '';
+      document.documentElement.style.overflow = '';
+      gatilhoAtivo?.focus();
+      gatilhoAtivo = null;
+    });
+  }
+</script>

@@ -4,11 +4,19 @@
  */
 import type { AccordionItem } from '../components/Accordion.astro';
 
-/** Seção "A Redion" — parágrafos do node 4010:74. */
+/**
+ * Seção "A Redion" — texto novo enviado pelo cliente em 03/08/2026
+ * (substitui a transcrição do node 4010:74 do Figma).
+ *
+ * ⚠️ O 2º parágrafo chegou truncado pelo "Ler mais" do WhatsApp, em
+ * "...reforçando seu compromisso com um ambiente que promove dese…".
+ * Encerramos a frase no ponto anterior, sem inventar o fecho. Falta confirmar
+ * o final e se existe um 3º parágrafo (a versão antiga tinha um sobre o
+ * propósito "You Live, We Care"). Ver Pendências no PROJECT.md.
+ */
 export const SOBRE_PARAGRAFOS = [
-  'A Redion é uma empresa global líder em soluções de assistência, seguro viagem e benefícios para colaboradores. Com mais de 60 anos de história e 30 anos de atuação no Brasil, está presente em mais de 190 países, conectando tecnologia, inovação e cuidado para apoiar pessoas e organizações nos momentos em que elas mais precisam.',
-  'No Brasil, a Redion oferece soluções de assistência, proteção, seguro viagem e benefícios para colaboradores, apoiando pessoas e empresas com mais segurança, tranquilidade e cuidado. Ao longo de sua trajetória, tornou-se parceira de importantes empresas dos setores de seguros, mobilidade, turismo, financeiro e residencial, atendendo clientes como Generali, Bradesco Seguros, Stellantis, Caixa Residencial, MSC, Icatu, entre outros. Reconhecida pelas certificações Great Place to Work (GPTW) e Top Employer, investe continuamente em um ambiente que promove desenvolvimento, bem-estar e oportunidades de crescimento.',
-  'Guiados pelo propósito "You Live, We Care", trabalhamos para estar presentes de forma genuína, prática e humana, ajudando as pessoas a aproveitarem ao máximo cada momento. Temos a ambição de ser o principal parceiro de cuidado no mundo.',
+  'A Redion é uma empresa global líder em soluções de assistência, benefícios para colaboradores e seguro viagem. Com mais de 60 anos de história e 30 anos de atuação no Brasil, está presente em mais de 190 países e territórios, conectando tecnologia, inovação e cuidado para apoiar pessoas e organizações nos momentos em que elas mais precisam. Reconhecida globalmente como Top Employer, investe continuamente no desenvolvimento de pessoas e na excelência de seus serviços.',
+  'No Brasil, a Redion oferece soluções em assistência e viagem, apoiando pessoas e empresas com mais segurança, tranquilidade e cuidado. Além disso, fazemos parte do Grupo Generali, uma das maiores seguradoras do mundo, e, no Brasil, temos o Bradesco Seguros como um dos nossos acionistas. Entre seus clientes estão Stellantis, Caixa Residencial, MSC e Icatu. Nacionalmente, a Redion é reconhecida como Great Place to Work (GPTW).',
 ] as const;
 
 /**
@@ -140,6 +148,12 @@ export const DEPOIMENTOS = [
     cargo: 'Especialista de [Área]',
     foto: 'images/depoimentos/pessoa-1.webp',
   },
+] as const;
+
+/** Texto de apoio do FAQ — enviado pelo cliente em 03/08/2026. */
+export const FAQ_INTRO = [
+  'Ainda ficou com alguma dúvida?',
+  'Entre em contato com a equipe de suporte da Eureca por meio da nossa Central de Ajuda. Acesse no botão abaixo!',
 ] as const;
 
 /** FAQ (node 4029:873). */

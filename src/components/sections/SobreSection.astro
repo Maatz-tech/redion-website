@@ -2,6 +2,7 @@
 import Button from '../Button.astro';
 import Icon from '../Icon.astro';
 import RevealText from '../RevealText.astro';
+import VideoOverlay from '../VideoOverlay.astro';
 import { SOBRE_PARAGRAFOS } from '../../data/conteudo';
 
 /** "A Redion" — node 4010:67 (desktop) / 4060:1544 (mobile). */
@@ -39,8 +40,9 @@ import { SOBRE_PARAGRAFOS } from '../../data/conteudo';
           class="absolute left-0 top-[-12px] h-[calc(100%+24px)] w-full object-cover object-[47%_center]"
         />
 
-        <a
-          href="#video"
+        <button
+          type="button"
+          data-video-abrir
           class="video-btn absolute bottom-12 left-1/2 flex -translate-x-1/2 items-center gap-3 rounded-full border border-white/30 bg-black/20 py-2.5 pl-2.5 pr-[23px] backdrop-blur-[2px] lg:bottom-16"
         >
           <span
@@ -49,7 +51,7 @@ import { SOBRE_PARAGRAFOS } from '../../data/conteudo';
             <Icon name="play" size={20} />
           </span>
           <span class="whitespace-nowrap text-xl text-white">Assista ao vídeo</span>
-        </a>
+        </button>
       </figure>
     </div>
 
@@ -62,6 +64,8 @@ import { SOBRE_PARAGRAFOS } from '../../data/conteudo';
     </div>
   </div>
 </section>
+
+<VideoOverlay id="WePjklxVdMY" titulo="Vídeo institucional da Redion" />
 
 <style>
   .video-btn {

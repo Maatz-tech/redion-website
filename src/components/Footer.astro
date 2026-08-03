@@ -1,6 +1,6 @@
 ---
 import Icon from './Icon.astro';
-import { LEGAL_LINKS, SOCIAL_LINKS } from '../data/site';
+import { LEGAL_LINKS, SOCIAL_LINKS, MAATZ_URL } from '../data/site';
 ---
 
 <footer class="bg-dark-blue">
@@ -60,15 +60,45 @@ import { LEGAL_LINKS, SOCIAL_LINKS } from '../data/site';
         }
       </ul>
 
-      <p class="body-sm flex items-center gap-2">
-        Desenvolvido por
-        <img src={`${import.meta.env.BASE_URL}images/brand/maatz.svg`} alt="Maatz" width="72" height="18" />
-      </p>
+      <a
+        href={MAATZ_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="assinatura body-sm flex items-center gap-2"
+      >
+        <span>Desenvolvido por</span>
+        <img
+          src={`${import.meta.env.BASE_URL}images/brand/maatz.svg`}
+          alt="Maatz"
+          width="72"
+          height="18"
+        />
+      </a>
     </div>
   </div>
 </footer>
 
 <style>
+  /* Assinatura da agência: o alvo é todo o "Desenvolvido por + logo". */
+  .assinatura span {
+    transition: color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .assinatura img {
+    transition:
+      opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .assinatura:hover span {
+    color: var(--color-medium-red);
+  }
+
+  .assinatura:hover img {
+    opacity: 0.75;
+    transform: translateY(-1px);
+  }
+
   .social-link {
     transition:
       background-color 240ms cubic-bezier(0.22, 1, 0.36, 1),

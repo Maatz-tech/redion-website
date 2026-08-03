@@ -154,6 +154,7 @@ zero hidratação. Tokens e helpers em `src/lib/motion.ts`.
 | Abrir/fechar acordeão e FAQ | altura real do conteúdo | `toggleAccordion` |
 | Carrossel de depoimentos | `x` do trilho | `animate` no `<script>` da seção |
 | Menu mobile | altura + stagger dos itens | `<script>` do Header |
+| Overlay do vídeo | fade + `scale` na moldura | `<script>` do `VideoOverlay` |
 | Hover de nav, botões, setas | CSS `transition` | — |
 | Card do FAQ (fundo + pergunta + troca +/−) | CSS `transition` | — |
 
@@ -179,6 +180,26 @@ Detalhes que não são óbvios e não devem ser "simplificados":
 - O preflight do Tailwind v4 zera o `cursor` dos `<button>`. O `global.css`
   devolve `cursor: pointer` — sem isso as setas do carrossel, os pontos e os
   gatilhos de acordeão/FAQ não pareciam clicáveis.
+
+---
+
+## Overlay do vídeo
+
+`VideoOverlay.astro` usa `<dialog>` nativo com `showModal()` — de graça vêm o
+trap de foco, o Esc, o `::backdrop` e o resto da página inerte para leitores de
+tela. Abre a partir de qualquer elemento com `data-video-abrir`.
+
+Dois detalhes que não devem ser "simplificados":
+
+- **O iframe é criado na abertura e removido no fechamento.** Assim a página não
+  faz nenhuma requisição ao YouTube no load (o embed sozinho passa de 800 KB e
+  derrubaria o Performance) e o vídeo para de tocar ao fechar, sem precisar da
+  API do player. Usa `youtube-nocookie.com`.
+- **O `overflow: hidden` mora no `.palco`, não na `.moldura`.** Com o recorte na
+  moldura, o `showModal()` focava o botão de fechar (posicionado fora dela) e o
+  navegador rolava o container para revelá-lo — arrastando o vídeo 56 px para o
+  lado. O botão só sai do quadro a partir de 1264 px, onde já sobram 82 px de
+  margem lateral.
 
 ---
 
@@ -299,23 +320,31 @@ Para regerar: `node scripts/shot.mjs <url> <largura> <saída.png>` e
    O preview vai com `noindex` para não competir com o domínio final.
    Ao definir o domínio: trocar `site`, remover o par `site`/`base` de preview
    e tirar `PREVIEW_NOINDEX` do workflow.
-2. **Destino do CTA "Inscreva-se agora"** — `INSCRICAO_URL` em `src/data/site.ts`
-   (hoje `#inscricao`).
-3. **Destino do "Fale conosco"** — `CONTATO_URL` em `src/data/site.ts`.
-4. **Vídeo** do card "Assista ao vídeo" (seção A Redion) — hoje aponta para
-   `#video`. Precisa do ID do YouTube/Vimeo ou do arquivo.
+2. ~~Destino do CTA "Inscreva-se agora"~~ — **resolvido em 03/08/2026:**
+   `https://go.eureca.me/TraineeRedion_botaoLP`.
+3. **URL da Central de Ajuda da Eureca** — o texto novo do FAQ manda "entre em
+   contato com a equipe de suporte da Eureca por meio da nossa Central de
+   Ajuda. Acesse no botão abaixo!", mas o link não veio. `CONTATO_URL` em
+   `src/data/site.ts` segue em `#contato`.
+4. ~~Vídeo do card "Assista ao vídeo"~~ — **resolvido em 03/08/2026:** abre em
+   overlay o YouTube `WePjklxVdMY` ("We are Redion", canal Redion Brasil).
 5. **LinkedIn da Redion** e URLs de **Aviso de Cookies** / **Política de
    Privacidade** — `SOCIAL_LINKS` / `LEGAL_LINKS` em `src/data/site.ts`.
 6. **Depoimentos** — os quatro slides estão com o texto e a pessoa fictícios do
    Figma ("Nome e sobrenome", "Especialista de [Área]"). Faltam textos, nomes,
    cargos e fotos reais (`src/data/conteudo.ts` → `DEPOIMENTOS`).
-7. **Textos de dois itens do acordeão "Conheça o Programa"** — "Áreas de
+7. **Fecho do 2º parágrafo do "sobre".** O texto novo (03/08/2026) chegou
+   truncado pelo "Ler mais" do WhatsApp, em "...reforçando seu compromisso com
+   um ambiente que promove dese…". Encerramos a frase no ponto anterior, sem
+   inventar o fecho — falta confirmar o final e se existe um 3º parágrafo (a
+   versão do Figma tinha um sobre o propósito "You Live, We Care").
+8. **Textos de dois itens do acordeão "Conheça o Programa"** — "Áreas de
    atuação" e "A oportunidade". No Figma os painéis estão ocultos e repetem o
    mesmo parágrafo de "A Jornada"; escrevemos um texto provisório coerente com o
    programa, marcado com `TODO` em `src/data/conteudo.ts`.
-8. **Três respostas do FAQ** — só a primeira tem texto no Figma. As outras três
+9. **Três respostas do FAQ** — só a primeira tem texto no Figma. As outras três
    estão provisórias, também marcadas com `TODO`.
-9. **Confirmar o vermelho dos rótulos com o designer.** O comp usa
+10. **Confirmar o vermelho dos rótulos com o designer.** O comp usa
    `bright-red` (#ff3026) no eyebrow, no botão "Fale conosco" e no nome do
    depoimento. Em 18–20 px sobre fundo claro isso dá **3,68:1** no branco e
    **3,14:1** no light-gray, e o AA pede 4,5:1 para texto normal — o Lighthouse
@@ -323,9 +352,9 @@ Para regerar: `node scripts/shot.mjs <url> <largura> <saída.png>` e
    marca e dá 6,05:1 / 5,16:1; a diferença visual é imperceptível. O bright-red
    ficou onde passa: headings de 48 px (texto grande, pede 3:1) e ícones
    (componente de UI, 3:1).
-10. **Foto do hero em resolução maior** — o arquivo original no Figma tem
+11. **Foto do hero em resolução maior** — o arquivo original no Figma tem
    1727 × 911 px. Para ficar realmente nítido em tela retina seria preciso o
    original em **≥ 2600 px de largura** (a foto de fundo e o recorte da pessoa
    em PNG com transparência). Hoje sobra 1,25× de ampliação no desktop retina.
-11. **Imagem OG** — `public/og.jpg` foi gerada a partir do hero. Se a marca tiver
+12. **Imagem OG** — `public/og.jpg` foi gerada a partir do hero. Se a marca tiver
    uma peça própria de 1200×630, é só substituir.
