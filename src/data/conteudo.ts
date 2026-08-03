@@ -114,39 +114,46 @@ export const ETAPAS = [
 ] as const;
 
 /**
- * Depoimentos (node 4025:97).
- * `foto` é relativa à raiz do site (sem barra): a seção prefixa com BASE_URL.
- * ⚠️ PLACEHOLDER — o Figma traz texto e pessoa fictícios.
- * Ver Pendências no PROJECT.md.
+ * Depoimentos (node 4025:97) — textos, nomes, cargos e fotos enviados pelo
+ * cliente em 03/08/2026.
+ *
+ * `texto` é uma lista de parágrafos: o depoimento do Maycon tem dois, e emendar
+ * tudo num parágrafo só mudaria o texto do cliente. As aspas que vieram no
+ * original foram removidas — o card já traz o ícone de citação.
  */
 export const DEPOIMENTOS = [
   {
-    texto:
-      'Depoimento de 3 a 5 linhas sobre a importância de desenvolver talentos, o papel do Programa Trainee na construção do pipeline de lideranças e o que espera dos profissionais que ingressam na Redion.',
-    nome: 'Nome e sobrenome',
-    cargo: 'Especialista de [Área]',
-    foto: 'images/depoimentos/pessoa-1.webp',
+    texto: [
+      'Acredito que investir em talentos é a forma mais concreta de construir o futuro da Redion. O Programa Trainee é onde esse futuro começa: reunindo pessoas curiosas, cheias de vontade de aprender e de deixar sua marca. Espero encontrar profissionais que não tenham medo de se desafiar e abracem o crescimento junto com a gente.',
+    ],
+    nome: 'Julio Cesar de Souza Santos',
+    cargo: 'Gerente de Riscos e Compliance',
+    foto: 'images/depoimentos/julio-cesar.webp',
   },
   {
-    texto:
-      'Depoimento de 3 a 5 linhas sobre a importância de desenvolver talentos, o papel do Programa Trainee na construção do pipeline de lideranças e o que espera dos profissionais que ingressam na Redion.',
-    nome: 'Nome e sobrenome',
-    cargo: 'Especialista de [Área]',
-    foto: 'images/depoimentos/pessoa-1.webp',
+    texto: [
+      'O que mais me marcou no Programa de Estágio da Redion foi perceber que, mesmo sendo estagiário, minhas ideias eram ouvidas e valorizadas. Desde o início, tive contato com profissionais experientes que me incentivaram a aprender na prática e participar de desafios reais do negócio. A cada projeto, ganhei mais confiança e desenvolvi habilidades que levarei para toda a minha carreira.',
+      'Para quem busca um ambiente acolhedor, com oportunidades de crescimento e aprendizado constante, a Redion é um lugar onde realmente é possível evoluir.',
+    ],
+    nome: 'Maycon Diodato Franca',
+    cargo: 'Estagiário da Tesouraria',
+    foto: 'images/depoimentos/maycon.webp',
   },
   {
-    texto:
-      'Depoimento de 3 a 5 linhas sobre a importância de desenvolver talentos, o papel do Programa Trainee na construção do pipeline de lideranças e o que espera dos profissionais que ingressam na Redion.',
-    nome: 'Nome e sobrenome',
-    cargo: 'Especialista de [Área]',
-    foto: 'images/depoimentos/pessoa-1.webp',
+    texto: [
+      'Entrei na Redion como estagiária e hoje, cinco anos depois, atuo como advogada em projetos que impactam diretamente o negócio. Essa trajetória só foi possível por causa do ambiente colaborativo daqui, onde as equipes caminham juntas e cada desafio estratégico se transforma em aprendizado. A empresa acredita no potencial de quem está começando. Para quem busca evoluir na prática, a Redion é o lugar certo para dar os primeiros passos e construir uma carreira sólida.',
+    ],
+    nome: 'Luana Ribeiro',
+    cargo: 'Advogada Pleno',
+    foto: 'images/depoimentos/luana.webp',
   },
   {
-    texto:
-      'Depoimento de 3 a 5 linhas sobre a importância de desenvolver talentos, o papel do Programa Trainee na construção do pipeline de lideranças e o que espera dos profissionais que ingressam na Redion.',
-    nome: 'Nome e sobrenome',
-    cargo: 'Especialista de [Área]',
-    foto: 'images/depoimentos/pessoa-1.webp',
+    texto: [
+      'Na Redion, acreditamos no potencial das pessoas. Minha trajetória, de Analista Sênior a Coordenadora em apenas 1 ano e meio, mostra como investir em talentos fortalece nossas futuras lideranças. O Programa Trainee é uma oportunidade para acelerar o aprendizado, desenvolver uma visão ampla do negócio e construir conexões entre áreas. Espero que os novos profissionais sejam curiosos, protagonistas e enxerguem os processos com olhar de companhia, indo além dos silos e contribuindo para resultados cada vez melhores.',
+    ],
+    nome: 'Mikaeli Marques de Souza',
+    cargo: 'Coordenadora de Rede de Prestadores',
+    foto: 'images/depoimentos/mikaeli.webp',
   },
 ] as const;
 

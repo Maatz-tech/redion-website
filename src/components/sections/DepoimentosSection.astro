@@ -58,9 +58,13 @@ import { INSCRICAO_URL } from '../../data/site';
                 aria-hidden={i === 0 ? undefined : 'true'}
               >
                 <figure
-                  class="flex h-full flex-col gap-6 rounded-[24px] border border-black/10 bg-white p-6 lg:gap-8 lg:px-[49px] lg:py-[25px]"
+                  class="flex h-full flex-col justify-between gap-6 rounded-[24px] border border-black/10 bg-white p-6 lg:gap-8 lg:px-[49px] lg:py-[25px]"
                 >
-                  <div class="flex flex-col gap-4 lg:max-w-[464px]">
+                  <!-- `my-auto`: os slides têm alturas diferentes e a linha flex iguala todos
+                       pelo mais longo (o do Maycon, com dois parágrafos). As margens
+                       automáticas centralizam a citação na sobra em vez de deixar um vão
+                       único embaixo dela; o autor segue preso no rodapé, como no comp. -->
+                  <div class="my-auto flex flex-col gap-4 lg:max-w-[464px]">
                     <img
                       src={`${import.meta.env.BASE_URL}images/decor/quote.svg`}
                       alt=""
@@ -69,17 +73,19 @@ import { INSCRICAO_URL } from '../../data/site';
                       height="38"
                       class="h-[38px] w-[37px]"
                     />
-                    <blockquote class="text-lg leading-[1.5] text-body">
-                      {dep.texto}
+                    <blockquote class="flex flex-col gap-4 text-lg leading-[1.5] text-body">
+                      {dep.texto.map((paragrafo) => (
+                        <p>{paragrafo}</p>
+                      ))}
                     </blockquote>
                   </div>
 
                   <figcaption class="flex items-center gap-4">
                     <img
                       src={`${import.meta.env.BASE_URL}${dep.foto}`}
-                      alt=""
-                      width="128"
-                      height="128"
+                      alt={`Foto de ${dep.nome}`}
+                      width="208"
+                      height="208"
                       loading="lazy"
                       class="size-16 shrink-0 object-cover"
                       style="border-radius: 0 16px 0 16px;"

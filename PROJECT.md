@@ -155,6 +155,14 @@ zero hidratação. Tokens e helpers em `src/lib/motion.ts`.
 | Carrossel de depoimentos | `x` do trilho | `animate` no `<script>` da seção |
 | Menu mobile | altura + stagger dos itens | `<script>` do Header |
 | Overlay do vídeo | fade + `scale` na moldura | `<script>` do `VideoOverlay` |
+
+**Carrossel de depoimentos:** os quatro depoimentos têm comprimentos bem
+diferentes (o do Maycon tem dois parágrafos). Como os slides ficam numa linha
+flex, todos assumem a altura do mais alto — o que evita salto de altura na
+transição. Para a sobra não virar um vão único embaixo do texto, a citação leva
+`my-auto` (centraliza no espaço livre) e o autor fica preso no rodapé, como no
+comp. Por isso o card tem 515 px no desktop em vez dos 308 do Figma: é o custo
+do texto real.
 | Hover de nav, botões, setas | CSS `transition` | — |
 | Card do FAQ (fundo + pergunta + troca +/−) | CSS `transition` | — |
 
@@ -243,6 +251,10 @@ O que tirou o score de 85 → 96, em ordem de impacto:
    (`build.inlineStylesheets: 'always'`).
 6. `preload` do LCP repetindo `imagesrcset`/`imagesizes` do `<img>` — sem isso o
    navegador trata como recurso diferente e baixa duas vezes.
+7. **Foto de fundo do hero em qualidade 68** (46 KB). Ela é o elemento do LCP e
+   está desfocada na foto original, então a compressão não aparece. O recorte da
+   pessoa — que é o que se lê — segue em 88 com unsharp. Sem isso o mobile
+   ficava oscilando em 94, abaixo do alvo.
 
 ---
 
@@ -330,9 +342,8 @@ Para regerar: `node scripts/shot.mjs <url> <largura> <saída.png>` e
    overlay o YouTube `WePjklxVdMY` ("We are Redion", canal Redion Brasil).
 5. **LinkedIn da Redion** e URLs de **Aviso de Cookies** / **Política de
    Privacidade** — `SOCIAL_LINKS` / `LEGAL_LINKS` em `src/data/site.ts`.
-6. **Depoimentos** — os quatro slides estão com o texto e a pessoa fictícios do
-   Figma ("Nome e sobrenome", "Especialista de [Área]"). Faltam textos, nomes,
-   cargos e fotos reais (`src/data/conteudo.ts` → `DEPOIMENTOS`).
+6. ~~Depoimentos~~ — **resolvido em 03/08/2026:** textos, nomes, cargos e fotos
+   das quatro pessoas (Julio Cesar, Maycon, Luana e Mikaeli).
 7. **Fecho do 2º parágrafo do "sobre".** O texto novo (03/08/2026) chegou
    truncado pelo "Ler mais" do WhatsApp, em "...reforçando seu compromisso com
    um ambiente que promove dese…". Encerramos a frase no ponto anterior, sem
