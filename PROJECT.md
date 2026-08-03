@@ -334,14 +334,16 @@ Para regerar: `node scripts/shot.mjs <url> <largura> <saída.png>` e
    e tirar `PREVIEW_NOINDEX` do workflow.
 2. ~~Destino do CTA "Inscreva-se agora"~~ — **resolvido em 03/08/2026:**
    `https://go.eureca.me/TraineeRedion_botaoLP`.
-3. **URL da Central de Ajuda da Eureca** — o texto novo do FAQ manda "entre em
-   contato com a equipe de suporte da Eureca por meio da nossa Central de
-   Ajuda. Acesse no botão abaixo!", mas o link não veio. `CONTATO_URL` em
-   `src/data/site.ts` segue em `#contato`.
+3. ~~URL da Central de Ajuda da Eureca~~ — **resolvido em 03/08/2026:** o botão
+   do FAQ virou "Central de Ajuda" e aponta para
+   `https://intercom.help/eureca_central/pt-BR`, em nova aba.
 4. ~~Vídeo do card "Assista ao vídeo"~~ — **resolvido em 03/08/2026:** abre em
    overlay o YouTube `WePjklxVdMY` ("We are Redion", canal Redion Brasil).
-5. **LinkedIn da Redion** e URLs de **Aviso de Cookies** / **Política de
-   Privacidade** — `SOCIAL_LINKS` / `LEGAL_LINKS` em `src/data/site.ts`.
+5. **LinkedIn da Redion** — `SOCIAL_LINKS` em `src/data/site.ts` segue em `#`.
+   O rodapé legal foi resolvido em 03/08/2026: **Política de Privacidade**
+   (`https://app.eureca.me/politica-de-privacidade`) e **Termos de Uso**
+   (`https://app.eureca.me/termos-de-uso`), ambos em nova aba. O "Aviso de
+   Cookies", que não tinha URL, saiu da lista.
 6. ~~Depoimentos~~ — **resolvido em 03/08/2026:** textos, nomes, cargos e fotos
    das quatro pessoas (Julio Cesar, Maycon, Luana e Mikaeli).
 7. **Fecho do 2º parágrafo do "sobre".** O texto novo (03/08/2026) chegou

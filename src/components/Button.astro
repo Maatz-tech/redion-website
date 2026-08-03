@@ -2,7 +2,7 @@
 /**
  * Botão da marca. Variantes vindas do Figma:
  * - `primary`  — sólido vermelho com o canto "folha" (padrão da página)
- * - `outline`  — pílula com contorno vermelho ("Fale conosco")
+ * - `outline`  — pílula com contorno vermelho ("Central de Ajuda")
  * - `pill`     — pílula branca sobre fundo escuro (CTA do hero)
  */
 interface Props {
@@ -21,8 +21,16 @@ const variantes = {
 } as const;
 
 const Tag = href ? 'a' : 'button';
+
+/**
+ * Link para fora do site abre em nova aba — regra única aqui em vez de repetir
+ * target/rel em cada CTA. Âncoras (#faq) seguem na mesma aba. Dá para
+ * sobrescrever passando `target` explícito.
+ */
+const externo = href?.startsWith('http') ?? false;
+const alvo = { ...(externo ? { target: '_blank', rel: 'noopener noreferrer' } : {}), ...rest };
 ---
 
-<Tag href={href} class:list={[variantes[variant], className]} {...rest}>
+<Tag href={href} class:list={[variantes[variant], className]} {...alvo}>
   <slot />
 </Tag>

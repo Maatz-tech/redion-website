@@ -240,7 +240,7 @@
     background: var(--color-bright-red);
   }
 
-  /* Contorno vermelho sobre fundo claro — "Fale conosco" (medium-red pelo
+  /* Contorno vermelho sobre fundo claro — "Central de Ajuda" (medium-red pelo
      mesmo motivo do eyebrow: 18px normal precisa de 4,5:1) */
   .btn-outline {
     border: 1px solid var(--color-medium-red);
