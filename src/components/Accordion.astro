@@ -15,6 +15,8 @@ export interface AccordionItem {
   texto?: string;
   /** Lista com marcadores (usado em Benefícios). */
   lista?: readonly string[];
+  /** Nota de rodapé do painel — o asterisco de um item da lista. */
+  nota?: string;
   icone: string;
 }
 
@@ -52,6 +54,7 @@ const { id, itens, class: className = '' } = Astro.props;
               ))}
             </ul>
           )}
+          {item.nota && <p class="body-sm pt-3.5">{item.nota}</p>}
         </div>
 
         <div class="accordion-rule mt-6">

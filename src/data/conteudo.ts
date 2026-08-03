@@ -22,9 +22,9 @@ export const SOBRE_PARAGRAFOS = [
 /**
  * Acordeão de "Conheça o Programa" (node 4010:167).
  *
- * ⚠️ No Figma só "A Jornada" tem texto próprio; os painéis de "Áreas de
- * atuação" e "A oportunidade" estão ocultos e repetem o mesmo parágrafo.
- * O texto abaixo para esses dois é PLACEHOLDER — ver Pendências no PROJECT.md.
+ * "Áreas de atuação" e "A oportunidade" estavam ocultos no Figma; os textos
+ * oficiais dos dois chegaram do cliente em 03/08/2026 e substituem os
+ * placeholders anteriores.
  */
 export const PROGRAMA_ITENS: readonly AccordionItem[] = [
   {
@@ -36,16 +36,16 @@ export const PROGRAMA_ITENS: readonly AccordionItem[] = [
   {
     titulo: 'Áreas de atuação',
     icone: 'users',
-    // TODO: texto oficial pendente com o cliente
+    // Texto corrido a pedido do cliente; a lista oficial de áreas entra na
+    // mesma ordem em que ele enviou.
     texto:
-      'Você poderá atuar em áreas como Operações, Comercial, Produto, Tecnologia, Financeiro e Pessoas & Cultura, com rotação entre times ao longo do programa para construir uma visão completa do negócio.',
+      'Você poderá atuar em áreas como Operações, Marketing/Produtos, Comercial/Travel, TI, Administrativo-Financeiro, RH e Área Técnica/Projetos, com rotação entre times ao longo do programa para construir uma visão completa do negócio.',
   },
   {
     titulo: 'A oportunidade',
     icone: 'star',
-    // TODO: texto oficial pendente com o cliente
     texto:
-      'Uma trilha estruturada de desenvolvimento, com mentoria de liderança, exposição a projetos estratégicos e um plano de carreira desenhado para quem quer crescer dentro de uma empresa global de cuidado.',
+      'Uma trilha estruturada de desenvolvimento, com acompanhamento e exposição a projetos estratégicos para quem quer crescer dentro de uma empresa global de cuidado.',
   },
 ];
 
@@ -84,7 +84,9 @@ export const BENEFICIOS_ITENS: readonly AccordionItem[] = [
       'Seguro de vida',
       'Convênio Farmácia',
       'TotalPass',
+      'Auxílio Especial*',
     ],
+    nota: '*destina-se a todos os colaboradores que possuem dependentes com deficiência conforme laudo médico.',
   },
   {
     titulo: 'Desenvolvimento',
@@ -97,16 +99,25 @@ export const BENEFICIOS_ITENS: readonly AccordionItem[] = [
     lista: [
       'Auxílio Creche',
       'Auxílio Telefonia',
+      'Auxílio Internet',
       'Estacionamento',
       'Quadras de areia e society',
     ],
   },
 ];
 
-/** Etapas do processo seletivo (node 4020:489). `cor` é a classe de fundo. */
+/**
+ * Etapas do processo seletivo (node 4020:489). `cor` é a classe de fundo;
+ * `obs` é a linha de apoio que explica ao candidato o que é a etapa.
+ */
 export const ETAPAS = [
   { titulo: 'Inscrições e Trilha Online', prazo: 'Até 26/08', cor: 'bg-bright-blue' },
-  { titulo: 'Jornada de Aprofundamento', prazo: '01/09 a 03/09', cor: 'bg-medium-blue' },
+  {
+    titulo: 'Jornada de Aprofundamento',
+    prazo: '01/09 a 03/09',
+    obs: 'Etapa de entrevistas por Inteligência Artificial',
+    cor: 'bg-medium-blue',
+  },
   { titulo: 'Painéis Online', prazo: '16/09 a 17/09', cor: 'bg-dark-blue' },
   { titulo: 'Entrevistas em inglês', prazo: '22/09 a 25/09', cor: 'bg-dark-red' },
   { titulo: 'Painel e entrevistas presenciais', prazo: 'A partir de 01/10', cor: 'bg-medium-red' },

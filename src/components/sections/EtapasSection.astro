@@ -35,6 +35,11 @@ import { ETAPAS } from '../../data/conteudo';
             <span class="flex flex-col gap-1">
               <span class="text-base leading-[1.22]">{etapa.titulo}</span>
               <span class="text-xl leading-[1.22]">{etapa.prazo}</span>
+              {/* Linha de apoio: explica ao candidato o que acontece na etapa.
+                  Menor e a 80% de opacidade para não competir com a data. */}
+              {'obs' in etapa && etapa.obs && (
+                <span class="mt-1 text-sm leading-[1.3] opacity-80">{etapa.obs}</span>
+              )}
             </span>
           </li>
         ))
