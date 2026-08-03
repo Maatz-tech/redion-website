@@ -56,6 +56,7 @@ import { INSCRICAO_URL } from '../../data/site';
                 aria-roledescription="slide"
                 aria-label={`${i + 1} de ${DEPOIMENTOS.length}`}
                 aria-hidden={i === 0 ? undefined : 'true'}
+                inert={i !== 0}
               >
                 <figure
                   class="flex h-full flex-col justify-between gap-6 rounded-[24px] border border-black/10 bg-white p-6 lg:gap-8 lg:px-[49px] lg:py-[25px]"
@@ -73,11 +74,30 @@ import { INSCRICAO_URL } from '../../data/site';
                       height="38"
                       class="h-[38px] w-[37px]"
                     />
-                    <blockquote class="flex flex-col gap-4 text-lg leading-[1.5] text-body">
+                    {/* O 1º depoimento é a régua: ele cabe inteiro em 6 linhas
+                        (desktop) / 9 (mobile), então vai sem corte e sem botão.
+                        Os outros nascem cortados nessa mesma altura. */}
+                    <blockquote
+                      id={`dep-texto-${i}`}
+                      class="dep-texto flex flex-col gap-4 text-lg leading-[1.5] text-body"
+                      data-clamp={i === 0 ? undefined : ''}
+                    >
                       {dep.texto.map((paragrafo) => (
                         <p>{paragrafo}</p>
                       ))}
                     </blockquote>
+
+                    {i > 0 && (
+                      <button
+                        type="button"
+                        class="ler-mais self-start"
+                        data-ler-mais
+                        aria-expanded="false"
+                        aria-controls={`dep-texto-${i}`}
+                      >
+                        Ler mais
+                      </button>
+                    )}
                   </div>
 
                   <figcaption class="flex items-center gap-4">
@@ -141,6 +161,45 @@ import { INSCRICAO_URL } from '../../data/site';
 </section>
 
 <style>
+  /* Corte por número de linhas (e não por max-height em em): assim a última
+     linha visível recebe as reticências e a conta não depende do gap entre os
+     parágrafos. O `-webkit-box` precisa vencer o `flex` do Tailwind — vence por
+     ser regra de componente (sem @layer) contra utilitário em camada. */
+  .dep-texto[data-clamp] {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 9;
+    line-clamp: 9;
+    overflow: hidden;
+  }
+
+  /* `gap` não vale dentro de -webkit-box; o depoimento do Maycon tem dois
+     parágrafos e emendaria num bloco só. */
+  .dep-texto[data-clamp] p + p {
+    margin-top: 1rem;
+  }
+
+  @media (width >= 1024px) {
+    .dep-texto[data-clamp] {
+      -webkit-line-clamp: 6;
+      line-clamp: 6;
+    }
+  }
+
+  /* Discreto de propósito: o destaque da seção é o CTA vermelho. */
+  .ler-mais {
+    color: var(--color-medium-blue);
+    font-size: 1rem;
+    line-height: 1.4;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .ler-mais:hover {
+    color: var(--color-blue-600);
+  }
+
   .seta {
     transition:
       background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -176,12 +235,74 @@ import { INSCRICAO_URL } from '../../data/site';
     const pontos = Array.from(raiz.querySelectorAll<HTMLButtonElement>('[data-ponto]'));
     let atual = 0;
 
+    /* --- "Ler mais" --- */
+
+    const gatilhos = Array.from(raiz.querySelectorAll<HTMLButtonElement>('[data-ler-mais]'));
+
+    const alvoDe = (botao: HTMLButtonElement) =>
+      raiz!.querySelector<HTMLElement>(`#${botao.getAttribute('aria-controls')}`)!;
+
+    function recolher(botao: HTMLButtonElement) {
+      alvoDe(botao).setAttribute('data-clamp', '');
+      botao.setAttribute('aria-expanded', 'false');
+      botao.textContent = 'Ler mais';
+    }
+
+    /**
+     * Some com o botão quando o texto já cabe no corte — vale para conteúdo
+     * novo, mais curto que os quatro de hoje. Só mede o que está cortado: num
+     * texto expandido scrollHeight e clientHeight são iguais e o botão sumiria
+     * por engano.
+     */
+    function revisarGatilhos() {
+      for (const botao of gatilhos) {
+        const alvo = alvoDe(botao);
+        if (!alvo.hasAttribute('data-clamp')) continue;
+        botao.hidden = alvo.scrollHeight <= alvo.clientHeight + 1;
+      }
+    }
+
+    for (const botao of gatilhos) {
+      botao.addEventListener('click', () => {
+        const alvo = alvoDe(botao);
+
+        if (alvo.hasAttribute('data-clamp')) {
+          alvo.removeAttribute('data-clamp');
+          botao.setAttribute('aria-expanded', 'true');
+          botao.textContent = 'Ler menos';
+        } else {
+          recolher(botao);
+        }
+      });
+    }
+
+    // As fontes mudam a altura da linha; medir antes delas dá falso negativo.
+    document.fonts.ready.then(revisarGatilhos);
+
+    let debounce: number;
+    window.addEventListener('resize', () => {
+      clearTimeout(debounce);
+      debounce = window.setTimeout(revisarGatilhos, 200);
+    });
+
     async function ir(indice: number) {
       atual = (indice + slides.length) % slides.length;
 
+      // Recolhe o que ficou aberto: os slides dividem a altura da linha flex,
+      // então um card expandido deixaria os outros com um vão enorme.
+      gatilhos.forEach(recolher);
+      revisarGatilhos();
+
       for (const [i, s] of slides.entries()) {
-        if (i === atual) s.removeAttribute('aria-hidden');
-        else s.setAttribute('aria-hidden', 'true');
+        // `inert` junto do aria-hidden: sem ele o "Ler mais" dos slides fora de
+        // tela continuaria alcançável pelo Tab.
+        if (i === atual) {
+          s.removeAttribute('aria-hidden');
+          s.removeAttribute('inert');
+        } else {
+          s.setAttribute('aria-hidden', 'true');
+          s.setAttribute('inert', '');
+        }
       }
       for (const [i, p] of pontos.entries()) {
         p.setAttribute('aria-current', String(i === atual));
