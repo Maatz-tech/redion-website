@@ -29,15 +29,38 @@ import { SOBRE_PARAGRAFOS } from '../../data/conteudo';
     <div class="lg:col-start-1 lg:row-start-1 lg:row-span-3" data-reveal>
       <figure class="photo-frame relative aspect-[327/466] w-full lg:aspect-[462/659] lg:h-auto">
         <img
-          src={`${import.meta.env.BASE_URL}images/redion/photo.webp`}
-          srcset={`${import.meta.env.BASE_URL}images/redion/photo-700.webp 700w, ${import.meta.env.BASE_URL}images/redion/photo.webp 1400w`}
-          sizes="(max-width: 1023px) 100vw, 462px"
+          src={`${import.meta.env.BASE_URL}images/redion/a-redion.webp`}
+          srcset={`${import.meta.env.BASE_URL}images/redion/a-redion.webp 609w, ${import.meta.env.BASE_URL}images/redion/a-redion-1200.webp 1200w`}
+          {/* Asset já entregue em RETRATO (609×840, 0,725) e no enquadramento
+              certo — nada de espelhar, só `object-cover`. Como o aspecto é quase
+              o do quadro, quase nenhum pixel se perde no recorte (a versão
+              paisagem anterior descartava ~46% da largura).
+              `sizes` é a largura PINTADA, não a do quadro: o `object-cover`
+              escala pela altura da caixa (quadro + 24px de folga do parallax),
+              o que dá 495px no desktop e ~103vw no mobile.
+              O 1200 é ampliação Lanczos + unsharp do 609 — não cria detalhe,
+              mas em retina rende melhor que a ampliação do browser. */}
+          sizes="(max-width: 1023px) 103vw, 495px"
           alt="Profissional da Redion em frente a um prédio corporativo"
-          width="1400"
-          height="933"
+          width="609"
+          height="840"
           loading="lazy"
           data-parallax
-          class="absolute left-0 top-[-12px] h-[calc(100%+24px)] w-full object-cover object-[47%_center]"
+          class="absolute left-0 top-[-12px] h-[calc(100%+24px)] w-full object-cover object-center"
+        />
+
+        <!-- Selo GPTW flutuando sobre a foto (topo-direito). Fica FORA do
+             `data-parallax`: o selo é um carimbo, não pode boiar junto com a
+             imagem. O recuo e o tamanho crescem com a tela, mas em toda largura
+             ele fica dentro do quadro — o `.photo-frame` tem `overflow:hidden`
+             e qualquer sangria seria cortada pelo canto arredondado. -->
+        <img
+          src={`${import.meta.env.BASE_URL}images/brand/selo-gptw-redion.svg`}
+          alt="Selo Great Place to Work — Redion certificada"
+          width="800"
+          height="1364"
+          loading="lazy"
+          class="pointer-events-none absolute right-4 top-4 z-10 h-[76px] w-auto drop-shadow-[0_6px_20px_rgba(4,6,26,0.35)] sm:right-5 sm:top-5 sm:h-[92px] lg:right-6 lg:top-6 lg:h-[108px]"
         />
 
         <button
