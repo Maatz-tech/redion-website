@@ -321,19 +321,24 @@ Para regerar: `node scripts/shot.mjs <url> <largura> <saída.png>` e
 
 ## Pendências (precisam de resposta do cliente)
 
-1. ~~Domínio final~~ — **resolvido em 03/08/2026:**
-   **https://traineeredion2026.com.br**. Com domínio próprio o Pages serve na
-   raiz, então: `site` trocado, o par `site`/`base` de preview removido,
-   `PREVIEW_NOINDEX` fora do workflow (a página precisa ser indexada),
-   `public/CNAME` criado e o sitemap do `robots.txt` apontado para o domínio.
+1. **Domínio final** — `astro.config.mjs` → `site`, hoje `https://exemplo.com.br`.
+   Ele alimenta canonical, OG e sitemap.
 
-   O `CNAME` em `public/` não é opcional numa publicação por Action: o deploy
-   sobe o conteúdo de `dist/`, e sem o arquivo no artefato o Pages perde a
-   configuração de domínio customizado no próximo deploy.
+   Enquanto isso o site roda em preview no GitHub Pages
+   (https://maatz-tech.github.io/redion-website/), que serve o repo num
+   subcaminho. Por isso todo asset é referenciado como
+   `${import.meta.env.BASE_URL}images/...` e as fontes moram em `src/assets`
+   (e não em `public/`): caminho absoluto funciona local e quebra no Pages.
+   O preview vai com `noindex` para não competir com o domínio final.
+   Ao definir o domínio: trocar `site`, remover o par `site`/`base` de preview
+   e tirar `PREVIEW_NOINDEX` do workflow.
 
-   Continua valendo referenciar asset como `${import.meta.env.BASE_URL}images/...`
-   e manter as fontes em `src/assets` (e não em `public/`) — é o que deixa o
-   `base` trocável sem caçar caminho absoluto pelo projeto.
+   O domínio escolhido é **traineeredion2026.com.br**, mas a troca foi feita e
+   revertida em 03/08/2026: sem o domínio ativo em Settings → Pages, o Pages
+   continuou servindo em `/redion-website/` e o `base: '/'` derrubou todos os
+   assets. A ordem certa é DNS apontando para o Pages e o domínio salvo em
+   Settings → Pages **primeiro**; só depois mexer no `astro.config.mjs`,
+   criar o `public/CNAME` e tirar o `PREVIEW_NOINDEX`.
 2. ~~Destino do CTA "Inscreva-se agora"~~ — **resolvido em 03/08/2026:**
    `https://go.eureca.me/TraineeRedion_botaoLP`.
 3. ~~URL da Central de Ajuda da Eureca~~ — **resolvido em 03/08/2026:** o botão

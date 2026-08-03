@@ -30,11 +30,11 @@ const {
 const tituloSocial = ogTitle ?? title;
 const descricaoSocial = ogDescription ?? description;
 
-/** Prefixo do site. Hoje sempre '/': o domínio próprio serve na raiz. */
+/** Prefixo do site. Vale '/' local e '/redion-website/' no GitHub Pages. */
 const BASE = import.meta.env.BASE_URL;
 
-// `site` vem do astro.config.mjs (domínio final desde 03/08/2026)
-const SITE_URL = Astro.site ?? new URL('https://traineeredion2026.com.br');
+// `site` vem do astro.config.mjs — TODO: trocar pelo domínio final (ver PROJECT.md)
+const SITE_URL = Astro.site ?? new URL('https://exemplo.com.br');
 const canonical = new URL(`${BASE}${Astro.url.pathname.replace(BASE, '')}`, SITE_URL).href;
 const ogImageUrl = new URL(`${BASE}${ogImage}`, SITE_URL).href;
 

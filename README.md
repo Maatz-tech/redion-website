@@ -34,16 +34,15 @@ node scripts/favicon.mjs
 Referências do Figma ficam em `docs/reference/`, capturas do build em `docs/local/`.
 
 ```sh
-# serve o build como ele sai no ar (domínio próprio = raiz)
-npm run build
-node scripts/serve-base.mjs dist / 4397
-# abre http://localhost:4397/ e confere que nada dá 404
+# simula o build do GitHub Pages (que serve o repo em /redion-website/)
+GITHUB_ACTIONS=true PREVIEW_NOINDEX=true npm run build
+node scripts/serve-base.mjs dist /redion-website 4397
+# abre http://localhost:4397/redion-website/ e confere que nada dá 404
 ```
 
-Rode isso sempre que adicionar um asset. O site já roda na raiz, mas continue
-usando `${import.meta.env.BASE_URL}images/...` em vez de `/images/...`: é o que
-deixa o `base` trocável (um preview em subcaminho, por exemplo) sem ter que
-caçar caminho absoluto pelo projeto depois.
+Rode isso sempre que adicionar um asset: um caminho absoluto esquecido
+(`/images/...` em vez de `${import.meta.env.BASE_URL}images/...`) funciona local
+e só quebra depois do deploy.
 
 ## Estrutura
 
@@ -71,17 +70,12 @@ componente.
 ## Deploy
 
 `.github/workflows/deploy.yml` publica no GitHub Pages a cada push na `main`
-(mesmo workflow dos projetos irmãos da org). O site no ar é
-**https://traineeredion2026.com.br**.
+(mesmo workflow dos projetos irmãos da org). O preview sai em
+**https://maatz-tech.github.io/redion-website/**, com `<meta name="robots"
+content="noindex">` enquanto o domínio final não estiver definido.
 
-O domínio customizado depende do `public/CNAME`: o deploy sobe o conteúdo de
-`dist/`, e sem esse arquivo no artefato o Pages perde a configuração no próximo
-deploy. No repositório, Settings → Pages precisa ter o mesmo domínio e o DNS
-apontando para o Pages.
-
-Para subir um preview em subcaminho de novo, é só rodar o build com
-`PREVIEW_NOINDEX=true` (o `Base.astro` ainda lê a variável) e devolver o par
-`site`/`base` no `astro.config.mjs`.
+Quando o domínio sair: trocar `site` no `astro.config.mjs`, remover o par
+`site`/`base` de preview e tirar o `PREVIEW_NOINDEX` do workflow.
 
 ## Antes de publicar
 

@@ -42,10 +42,11 @@ jobs:
         run: npm ci
 
       - name: Build
-        # Sem PREVIEW_NOINDEX desde 03/08/2026: o domínio final está no ar e a
-        # página PRECISA ser indexada. A variável continua existindo no
-        # Base.astro para quando for preciso subir um preview de novo.
+        # PREVIEW_NOINDEX mantém o preview do Pages fora dos índices de busca
+        # enquanto o domínio final não estiver definido (ver PROJECT.md).
         run: npm run build
+        env:
+          PREVIEW_NOINDEX: 'true'
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

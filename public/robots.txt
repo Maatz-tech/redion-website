@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://traineeredion2026.com.br/sitemap-index.xml
+Sitemap: https://exemplo.com.br/sitemap-index.xml
