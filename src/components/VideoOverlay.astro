@@ -2,31 +2,32 @@
 import Icon from './Icon.astro';
 
 /**
- * Overlay de vídeo do YouTube.
+ * Overlay do vídeo institucional.
  *
  * Usa `<dialog>` nativo em vez de uma div com z-index: o `showModal()` já dá
  * de graça o trap de foco, o fechamento no Esc, o `::backdrop` e o resto da
  * página inerte para leitores de tela. (Fase 6 do playbook: HTML nativo antes
  * de JS.)
  *
- * O iframe é injetado só na abertura e removido no fechamento. Isso mantém
- * zero requisição ao YouTube no carregamento da página — o embed sozinho
- * custaria ~800 KB e derrubaria o score de performance — e faz o vídeo parar
- * de tocar ao fechar, sem precisar da API do player.
+ * O `<video>` é injetado só na abertura e removido no fechamento: o arquivo
+ * (~3,8 MB) não pesa no carregamento da página e o vídeo para de tocar ao
+ * fechar sem precisar mexer no player. Arquivo servido do próprio domínio —
+ * antes era um embed do YouTube, trocado a pedido do cliente em 05/08/2026.
  *
  * Abre a partir de qualquer elemento com `data-video-abrir`.
  */
 interface Props {
-  /** ID do vídeo no YouTube (o `v=` da URL). */
-  id: string;
+  /** Caminho do arquivo dentro de `public/` (sem a barra inicial). */
+  src?: string;
   /** Título acessível do diálogo. */
   titulo?: string;
 }
 
-const { id, titulo = 'Vídeo institucional da Redion' } = Astro.props;
+const { src = 'videos/we-are-redion.mp4', titulo = 'Vídeo institucional da Redion' } = Astro.props;
+const url = `${import.meta.env.BASE_URL}${src}`;
 ---
 
-<dialog id="video-overlay" aria-label={titulo} data-video-id={id}>
+<dialog id="video-overlay" aria-label={titulo} data-video-src={url}>
   <div class="moldura">
     <button type="button" data-video-fechar class="fechar" aria-label="Fechar vídeo">
       <Icon name="close" size={24} />
@@ -69,11 +70,13 @@ const { id, titulo = 'Vídeo institucional da Redion' } = Astro.props;
     background: #000;
   }
 
-  .palco :global(iframe) {
+  .palco :global(video) {
     display: block;
     width: 100%;
     height: 100%;
     border: 0;
+    /* o master é 640×360; `contain` evita esticar/cortar se o arquivo mudar */
+    object-fit: contain;
   }
 
   .fechar {
@@ -121,30 +124,26 @@ const { id, titulo = 'Vídeo institucional da Redion' } = Astro.props;
   if (overlay) {
     const palco = overlay.querySelector<HTMLElement>('[data-video-palco]')!;
     const moldura = overlay.querySelector<HTMLElement>('.moldura')!;
-    const idVideo = overlay.dataset.videoId!;
+    const urlVideo = overlay.dataset.videoSrc!;
     let gatilhoAtivo: HTMLElement | null = null;
 
-    /** youtube-nocookie: não grava cookie de rastreio em quem só abriu a página. */
-    function montarIframe() {
-      const params = new URLSearchParams({
-        autoplay: '1',
-        rel: '0',
-        modestbranding: '1',
-        playsinline: '1',
-        hl: 'pt-BR',
-      });
-      const iframe = document.createElement('iframe');
-      iframe.src = `https://www.youtube-nocookie.com/embed/${idVideo}?${params}`;
-      iframe.title = overlay!.getAttribute('aria-label') ?? 'Vídeo';
-      iframe.allow =
-        'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-      iframe.allowFullscreen = true;
-      palco.replaceChildren(iframe);
+    function montarVideo() {
+      const video = document.createElement('video');
+      video.src = urlVideo;
+      video.title = overlay!.getAttribute('aria-label') ?? 'Vídeo';
+      video.controls = true;
+      video.playsInline = true;
+      video.preload = 'auto';
+      palco.replaceChildren(video);
+      // A abertura vem sempre de um clique, então o autoplay COM som passa nos
+      // navegadores. Se algum bloquear, o play falha calado e os controles
+      // nativos continuam ali para o usuário dar play.
+      video.play().catch(() => {});
     }
 
     async function abrir(gatilho: HTMLElement) {
       gatilhoAtivo = gatilho;
-      montarIframe();
+      montarVideo();
       overlay!.showModal();
       // o showModal deixa o fundo inerte, mas não trava o scroll
       document.documentElement.style.overflow = 'hidden';
@@ -181,7 +180,7 @@ const { id, titulo = 'Vídeo institucional da Redion' } = Astro.props;
 
     // limpeza única, aconteça o fechamento por onde acontecer
     overlay.addEventListener('close', () => {
-      palco.replaceChildren(); // remove o iframe → o vídeo para
+      palco.replaceChildren(); // remove o <video> → para de tocar e de baixar
       moldura.style.opacity = '';
       moldura.style.transform = '';
       document.documentElement.style.overflow = '';

@@ -15,7 +15,7 @@ import type { AccordionItem } from '../components/Accordion.astro';
  * propósito "You Live, We Care"). Ver Pendências no PROJECT.md.
  */
 export const SOBRE_PARAGRAFOS = [
-  'A Redion é uma empresa global líder em soluções de assistência, benefícios para colaboradores e seguro viagem. Com mais de 60 anos de história e 30 anos de atuação no Brasil, está presente em mais de 190 países e territórios, conectando tecnologia, inovação e cuidado para apoiar pessoas e organizações nos momentos em que elas mais precisam. Reconhecida globalmente como Top Employer, investe continuamente no desenvolvimento de pessoas e na excelência de seus serviços.',
+  'A Redion é uma empresa global líder em soluções de assistência, benefícios para colaboradores e seguro viagem. Com mais de 60 anos de história e 30 anos de atuação no Brasil, está presente em mais de 190 países, conectando tecnologia, inovação e cuidado para apoiar pessoas e organizações nos momentos em que elas mais precisam. Reconhecida globalmente como Top Employer, investe continuamente no desenvolvimento de pessoas e na excelência de seus serviços.',
   'No Brasil, a Redion oferece soluções em assistência e viagem, apoiando pessoas e empresas com mais segurança, tranquilidade e cuidado. Além disso, fazemos parte do Grupo Generali, uma das maiores seguradoras do mundo, e, no Brasil, temos o Bradesco Seguros como um dos nossos acionistas. Entre seus clientes estão Stellantis, Caixa Residencial, MSC e Icatu. Nacionalmente, a Redion é reconhecida como Great Place to Work (GPTW).',
 ] as const;
 
@@ -37,9 +37,11 @@ export const PROGRAMA_ITENS: readonly AccordionItem[] = [
     titulo: 'Áreas de atuação',
     icone: 'users',
     // Texto corrido a pedido do cliente; a lista oficial de áreas entra na
-    // mesma ordem em que ele enviou.
+    // mesma ordem em que ele enviou. Revisão de 05/08/2026: Administrativo-
+    // Financeiro saiu (não abrirão vagas nessa frente) e Comercial/Travel virou
+    // Comercial/Marketing.
     texto:
-      'Você poderá atuar em áreas como Operações, Marketing/Produtos, Comercial/Travel, TI, Administrativo-Financeiro, RH e Área Técnica/Projetos, com rotação entre times ao longo do programa para construir uma visão completa do negócio.',
+      'Você poderá atuar em áreas como Operações, Marketing/Produtos, Comercial/Marketing, TI, RH e Área Técnica/Projetos, com rotação entre times ao longo do programa para construir uma visão completa do negócio.',
   },
   {
     titulo: 'A oportunidade',
