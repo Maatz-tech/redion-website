@@ -199,10 +199,11 @@ tela. Abre a partir de qualquer elemento com `data-video-abrir`.
 
 Dois detalhes que não devem ser "simplificados":
 
-- **O iframe é criado na abertura e removido no fechamento.** Assim a página não
-  faz nenhuma requisição ao YouTube no load (o embed sozinho passa de 800 KB e
-  derrubaria o Performance) e o vídeo para de tocar ao fechar, sem precisar da
-  API do player. Usa `youtube-nocookie.com`.
+- **O `<video>` é criado na abertura e removido no fechamento.** Assim o arquivo
+  (`public/videos/we-are-redion.mp4`, ~3,8 MB) não entra no load da página e o
+  vídeo para de tocar — e de baixar — ao fechar. O `play()` é chamado na
+  abertura: como ela vem sempre de um clique, o autoplay com som passa; se algum
+  navegador bloquear, a promise falha calada e os controles nativos seguem lá.
 - **O `overflow: hidden` mora no `.palco`, não na `.moldura`.** Com o recorte na
   moldura, o `showModal()` focava o botão de fechar (posicionado fora dela) e o
   navegador rolava o container para revelá-lo — arrastando o vídeo 56 px para o
@@ -321,31 +322,38 @@ Para regerar: `node scripts/shot.mjs <url> <largura> <saída.png>` e
 
 ## Pendências (precisam de resposta do cliente)
 
-1. **Domínio final** — `astro.config.mjs` → `site`, hoje `https://exemplo.com.br`.
-   Ele alimenta canonical, OG e sitemap.
+1. ~~Domínio final~~ — **resolvido em 05/08/2026:**
+   **https://traineeredion2026.com.br**, publicado na Hostinger por upload
+   manual do `dist/` (não pelo GitHub Pages).
 
-   Enquanto isso o site roda em preview no GitHub Pages
-   (https://maatz-tech.github.io/redion-website/), que serve o repo num
-   subcaminho. Por isso todo asset é referenciado como
-   `${import.meta.env.BASE_URL}images/...` e as fontes moram em `src/assets`
-   (e não em `public/`): caminho absoluto funciona local e quebra no Pages.
-   O preview vai com `noindex` para não competir com o domínio final.
-   Ao definir o domínio: trocar `site`, remover o par `site`/`base` de preview
-   e tirar `PREVIEW_NOINDEX` do workflow.
+   `npm run build` já sai pronto para produção: `site` é o domínio, `base` é
+   `/`, e sem `PREVIEW_NOINDEX` a página vai indexável. Canonical, `og:url`,
+   `og:image`, JSON-LD e os dois sitemaps saem todos absolutos no domínio; o
+   `public/robots.txt` aponta o `Sitemap:` para lá.
 
-   O domínio escolhido é **traineeredion2026.com.br**, mas a troca foi feita e
-   revertida em 03/08/2026: sem o domínio ativo em Settings → Pages, o Pages
-   continuou servindo em `/redion-website/` e o `base: '/'` derrubou todos os
-   assets. A ordem certa é DNS apontando para o Pages e o domínio salvo em
-   Settings → Pages **primeiro**; só depois mexer no `astro.config.mjs`,
-   criar o `public/CNAME` e tirar o `PREVIEW_NOINDEX`.
+   O par `site`/`base` de preview **continua** no `astro.config.mjs`, atrás do
+   `GITHUB_ACTIONS`: o workflow ainda publica a cada push na `main` e o Pages
+   serve o repo em `/redion-website/`. Unificar os dois foi o que quebrou em
+   03/08/2026 (abc9b38 → revertido em af8b64a): com `base: '/'` no Pages todo
+   asset virou 404. O preview segue com `PREVIEW_NOINDEX=true` para não
+   competir com o domínio nos índices de busca.
+
+   Nada de `public/CNAME`: ele serve ao domínio customizado do Pages, e o Pages
+   não é o destino de produção.
+
+   Continua valendo referenciar asset como `${import.meta.env.BASE_URL}images/...`
+   e manter as fontes em `src/assets` (e não em `public/`) — é o que deixa o
+   `base` trocável sem caçar caminho absoluto pelo projeto.
 2. ~~Destino do CTA "Inscreva-se agora"~~ — **resolvido em 03/08/2026:**
    `https://go.eureca.me/TraineeRedion_botaoLP`.
 3. ~~URL da Central de Ajuda da Eureca~~ — **resolvido em 03/08/2026:** o botão
    do FAQ virou "Central de Ajuda" e aponta para
    `https://intercom.help/eureca_central/pt-BR`, em nova aba.
-4. ~~Vídeo do card "Assista ao vídeo"~~ — **resolvido em 03/08/2026:** abre em
-   overlay o YouTube `WePjklxVdMY` ("We are Redion", canal Redion Brasil).
+4. ~~Vídeo do card "Assista ao vídeo"~~ — **resolvido em 05/08/2026:** o embed do
+   YouTube (`WePjklxVdMY`) deu lugar ao arquivo enviado pelo cliente, servido do
+   próprio domínio em `public/videos/we-are-redion.mp4` (640×360, 62 s, 3,8 MB).
+   Se o cliente tiver um master em resolução maior, vale trocar — 360p abre bem
+   no overlay de 1100 px, mas não é nítido.
 5. **LinkedIn da Redion** — `SOCIAL_LINKS` em `src/data/site.ts` segue em `#`.
    O rodapé legal foi resolvido em 03/08/2026: **Política de Privacidade**
    (`https://app.eureca.me/politica-de-privacidade`) e **Termos de Uso**

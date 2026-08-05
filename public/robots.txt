@@ -1,4 +1,7 @@
+# Arquivo estático: sai igual nos dois builds. O sitemap aponta sempre para o
+# domínio de produção — no preview do GitHub Pages isso não tem efeito, porque
+# lá a página sai com <meta name="robots" content="noindex">.
 User-agent: *
 Allow: /
 
-Sitemap: https://exemplo.com.br/sitemap-index.xml
+Sitemap: https://traineeredion2026.com.br/sitemap-index.xml

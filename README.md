@@ -34,15 +34,18 @@ node scripts/favicon.mjs
 Referências do Figma ficam em `docs/reference/`, capturas do build em `docs/local/`.
 
 ```sh
-# simula o build do GitHub Pages (que serve o repo em /redion-website/)
+# serve o build como ele sai no ar (domínio próprio = raiz)
+npm run build
+node scripts/serve-base.mjs dist / 4397
+
+# simula o preview do GitHub Pages (que serve o repo em /redion-website/)
 GITHUB_ACTIONS=true PREVIEW_NOINDEX=true npm run build
 node scripts/serve-base.mjs dist /redion-website 4397
-# abre http://localhost:4397/redion-website/ e confere que nada dá 404
 ```
 
 Rode isso sempre que adicionar um asset: um caminho absoluto esquecido
-(`/images/...` em vez de `${import.meta.env.BASE_URL}images/...`) funciona local
-e só quebra depois do deploy.
+(`/images/...` em vez de `${import.meta.env.BASE_URL}images/...`) funciona na
+raiz e só quebra no preview em subcaminho.
 
 ## Estrutura
 
@@ -69,16 +72,28 @@ componente.
 
 ## Deploy
 
-`.github/workflows/deploy.yml` publica no GitHub Pages a cada push na `main`
-(mesmo workflow dos projetos irmãos da org). O preview sai em
-**https://maatz-tech.github.io/redion-website/**, com `<meta name="robots"
-content="noindex">` enquanto o domínio final não estiver definido.
+**Produção — https://traineeredion2026.com.br (Hostinger, manual):**
 
-Quando o domínio sair: trocar `site` no `astro.config.mjs`, remover o par
-`site`/`base` de preview e tirar o `PREVIEW_NOINDEX` do workflow.
+```sh
+npm run build   # dist/ já sai com o domínio em canonical, OG, JSON-LD e sitemap
+```
+
+Subir o **conteúdo** de `dist/` (não a pasta) na raiz pública do domínio —
+`public_html/` no File Manager ou FTP da Hostinger. É um site estático: não há
+build, runtime nem redirect a configurar do lado do servidor.
+
+**Preview — https://maatz-tech.github.io/redion-website/:**
+`.github/workflows/deploy.yml` publica no GitHub Pages a cada push na `main`
+(mesmo workflow dos projetos irmãos da org). O Pages serve o repo num
+subcaminho, então lá o `astro.config.mjs` usa o par `site`/`base` de preview e o
+workflow passa `PREVIEW_NOINDEX=true` — o preview sai com `<meta name="robots"
+content="noindex">` para não competir com o domínio nos índices de busca.
+
+Os dois builds convivem no mesmo `astro.config.mjs`, separados pelo
+`GITHUB_ACTIONS`. Não unificar: com `base: '/'` no Pages todo asset dá 404
+(aconteceu em 03/08/2026, commit revertido).
 
 ## Antes de publicar
 
-Resolver as pendências listadas no fim do `PROJECT.md` — principalmente o
-domínio final em `astro.config.mjs` (alimenta canonical, OG e sitemap) e os
-destinos dos CTAs em `src/data/site.ts`.
+Conferir as pendências listadas no fim do `PROJECT.md` — hoje só o LinkedIn da
+Redion em `src/data/site.ts` e as respostas oficiais de três itens do FAQ.
