@@ -164,16 +164,19 @@ import { INSCRICAO_URL } from '../../data/site';
       termina em 955). A altura entra em vw junto para o selo encolher na
       mesma proporção entre 1024 e 1440.
 
-      Mobile: o topo-direito do hero é o único vão livre — o lockup é largo,
-      mas a parte de cima dele é estreita (a arte branca só chega a ~320px de
-      um viewport de 390). 72px de altura cabem nesse vão com folga.
+      Mobile: mesma leitura do desktop — ao lado da cabeça da moça. Ancorado
+      pelo RODAPÉ (`bottom`), não pelo topo: a arte termina exatamente no fim
+      do hero, então é o rodapé que fica preso à foto. A altura do bloco da
+      arte é `aspect-[375/340]` sobre a largura da tela, ou seja proporcional
+      ao vw — por isso os recuos vão em vw e o selo cai sempre no mesmo ponto
+      da foto, de 360 a 1023.
     -->
     <img
       src={`${import.meta.env.BASE_URL}images/brand/selo-gptw-redion.svg`}
       alt="Selo Great Place to Work — Redion certificada"
       width="800"
       height="1364"
-      class="pointer-events-none absolute right-6 top-4 z-20 h-[72px] w-auto drop-shadow-[0_6px_20px_rgba(4,6,26,0.35)] sm:h-[84px] lg:right-auto lg:left-[min(82.22vw,1184px)] lg:top-[min(2.43vw,35px)] lg:h-[min(7.5vw,108px)]"
+      class="pointer-events-none absolute bottom-[48.7vw] right-[9vw] z-20 h-[116px] w-auto drop-shadow-[0_6px_20px_rgba(4,6,26,0.35)] lg:bottom-auto lg:right-auto lg:left-[min(82.22vw,1184px)] lg:top-[min(2.43vw,35px)] lg:h-[min(7.5vw,108px)]"
     />
   </div>
 </section>
