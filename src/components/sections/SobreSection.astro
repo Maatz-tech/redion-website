@@ -49,19 +49,7 @@ import { SOBRE_PARAGRAFOS } from '../../data/conteudo';
           class="absolute left-0 top-[-12px] h-[calc(100%+24px)] w-full object-cover object-center"
         />
 
-        <!-- Selo GPTW flutuando sobre a foto (topo-direito). Fica FORA do
-             `data-parallax`: o selo é um carimbo, não pode boiar junto com a
-             imagem. O recuo e o tamanho crescem com a tela, mas em toda largura
-             ele fica dentro do quadro — o `.photo-frame` tem `overflow:hidden`
-             e qualquer sangria seria cortada pelo canto arredondado. -->
-        <img
-          src={`${import.meta.env.BASE_URL}images/brand/selo-gptw-redion.svg`}
-          alt="Selo Great Place to Work — Redion certificada"
-          width="800"
-          height="1364"
-          loading="lazy"
-          class="pointer-events-none absolute right-4 top-4 z-10 h-[76px] w-auto drop-shadow-[0_6px_20px_rgba(4,6,26,0.35)] sm:right-5 sm:top-5 sm:h-[92px] lg:right-6 lg:top-6 lg:h-[108px]"
-        />
+        <!-- O selo GPTW que ficava aqui subiu para o hero. -->
 
         <button
           type="button"
